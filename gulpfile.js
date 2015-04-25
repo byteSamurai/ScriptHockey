@@ -61,7 +61,8 @@ gulp.task('browserify', function() {
  * Startet Server
  */
 gulp.task("server", function () {
-    require("./app");
+    process.env.DEBUG=production?0:"ScriptHockey:*";
+    require("./bin/www");
 });
 
 //Refresh
