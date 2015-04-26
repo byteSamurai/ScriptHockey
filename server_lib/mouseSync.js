@@ -1,7 +1,8 @@
 module.exports= function (io) {
+
     var userAmount=0,
-        dataLog=0;
-    var userData={};
+        userData={};
+
     io.sockets.on("connection",function(socket){
         userData[socket.id]=null;
         io.emit("userAmount", ++userAmount);

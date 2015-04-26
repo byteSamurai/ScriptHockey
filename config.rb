@@ -2,11 +2,11 @@ require 'compass/import-once/activate'
 # Require any additional compass plugins here.
 
 http_path = "/"
-css_dir = "css"
-sass_dir = "sass"
-images_dir = "images"
-javascripts_dir = "build"
-fonts_dir = "font"
+css_dir = "public/css"
+sass_dir = "public/sass"
+images_dir = "public/images"
+javascripts_dir = "public/javascript/dist"
+fonts_dir = "public/font"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed

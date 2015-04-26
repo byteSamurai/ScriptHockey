@@ -9,10 +9,10 @@
  */
 
 //Configuration
-var jsOutput = ['./build/**/*.js'];
-var cssFiles = ['./css/**/*.css'];
-var htmlFiles = ['./**/*.html'];
-var jsBrowserifyFiles = ['./src/main.js', 'src/**/*.js'];
+var jsOutput = ['./public/javascripts/dist/**/*.js'];
+var cssFiles = ['./public/css/**/*.css'];
+var htmlFiles = ['./views/**/*.hbs'];
+var jsBrowserifyFiles = ['./public/javascripts/src/main.js', '/public/javascripts/src/**/*.js'];
 /**
  * Setz produktiv-Umgebung
  * zu setzen bei Aufruf
@@ -54,7 +54,7 @@ gulp.task('browserify', function() {
         })
         .pipe(rename("main.dist.js"))
         .pipe(gulpif(production, uglify({preserveComments: "some"})))
-        .pipe(gulp.dest("./build"));
+        .pipe(gulp.dest("./public/javascripts/dist/"));
 });
 
 /**
