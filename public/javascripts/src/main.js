@@ -15,7 +15,7 @@ $(function () {
     var Field = require("./Field");
     var field=new Field().build();
 
-    var Puck= require("./Puck");
+    var Puck= require("./puck");
     var puck=new Puck();
 
 
