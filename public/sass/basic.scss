@@ -5,7 +5,11 @@
 
 
 // Das ist ein guter Ort für allgemein gültige Styles! ;)
+html, body{
+   height: 100%;
+}
 body{
+   margin: 0;
    padding: 0;
-   margin: 30px;
+   overflow:hidden; //it's a ab: no scroll at body
 }
