@@ -32,6 +32,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     gulpif = require('gulp-if'),
     nodemon = require('gulp-nodemon'),
+    karma = require('karma').server,
     run = require('gulp-run');
 /**
  * Fügt module zusammen
@@ -63,13 +64,17 @@ gulp.task('browserify', function () {
  */
 gulp.task("server", function () {
     process.env.DEBUG = production ? 0 : "ScriptHockey:*";
-    //require("./bin/www");
-    nodemon({
-        script: './bin/www',
-        ext: 'js hbs',
-        watch: ['server_lib','views','routes'],
-        env: {'NODE_ENV': 'development'}
-    });
+
+    if(production){
+        require("./bin/www");
+    }else{
+        nodemon({
+            script: './bin/www',
+            ext: 'js hbs',
+            watch: ['server_lib','views','routes'],
+            env: {'NODE_ENV': 'development'}
+        });
+    }
 });
 
 //Refresh
@@ -97,7 +102,18 @@ gulp.task('watch', ["server"], function () {
     gulp.watch(jsBrowserifyFiles, ['browserify']);
 
 });
+/**
+ * Test-Runner
+ */
+gulp.task('test',["browserify"], function () {
+    return karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, function () {
+        //do nada
+    });
 
+});
 /**
  * Default-task:
  */

@@ -9,10 +9,14 @@ function errorNotification(mess){
 }
 
 
+
 $(function () {
     //Zeichne Spielfeld
     var Field = require("./Field");
-    new Field().build();
+    var field=new Field().build();
+
+    var Puck= require("./Puck");
+    var puck=new Puck();
 
 
 });

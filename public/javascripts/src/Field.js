@@ -4,15 +4,18 @@
  * Time: 18:08
  */
 
+const RATIO = 0.666;
+const DEBOUNCE_DELAY_MS=150;
+const VERT_UNITS=1000;
+const HORZ_UNITS=VERT_UNITS*RATIO;
+
+
 /**
  * Spielfeld
  * Seiten müssen im Verhältnis 3:2 angelegt werden
  * @link: http://turf.missouri.edu/stat/images/field/dimhockey.gif
  *
  */
-const RATIO = 0.666;
-const DEBOUNCE_DELAY_MS=150;
-
 class Field {
     constructor() {
         "use strict";
@@ -67,6 +70,24 @@ class Field {
     }
 
     /**
+     * Wandel Darstellungseinheiten in Pixel um
+     * @param {{x: number, y: number}} unit
+     * @returns {{x: number, y: number}}
+     */
+    static units2Pixel(unit){
+        "use strict";
+        if(typeof unit !== "object" || isNaN(unit.x) || isNaN(unit.x)){
+            throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
+        }
+
+        return {x:0,y:0};
+    }
+
+    static pixel2units(pixel){
+        "use strict";
+
+    }
+    /**
      * Platziert das Feld im Browser
      */
     build() {
@@ -75,16 +96,31 @@ class Field {
         var fieldRef = this;
 
         $.get("/" + this.name.toLowerCase())
-            .then(function (response) {
-                fieldRef.fieldHTML = $(response).css({
+            .then((response)=>{
+                var jqResponse=$(response);
+                jqResponse.css({
                     height: fieldRef.height,
                     width: fieldRef.width,
                     marginLeft: fieldRef.width * -.5 //4 center-alignment
                 });
-                return fieldRef
+                fieldRef.fieldHTML =jqResponse;
+
+                return fieldRef;
+
+            },()=>{
+                throw new Error("Could not get field from server")
             })
-            .then(Field._removeFromDom)
-            .then(Field._dropAtDom);
+            .then(Field._removeFromDom,null)
+            .then(Field._dropAtDom,null);
+    }
+
+    /**
+     *
+     * @returns {number}
+     */
+    getFieldHeight(){
+        "use strict";
+        return this.height;
     }
 }
 module.exports = Field;
