@@ -1,8 +1,11 @@
-@import "compass"; // Dass IntelliJ hier nichts findet, ist normal!!!
+@import "compass";
 
 @import "techdemo";
+@import "field";
+
+
+// Das ist ein guter Ort für allgemein gültige Styles! ;)
 body{
    padding: 0;
    margin: 30px;
-
 }
