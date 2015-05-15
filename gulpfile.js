@@ -31,6 +31,7 @@ var gulp = require('gulp'),
     path = require('path'),
     uglify = require('gulp-uglify'),
     gulpif = require('gulp-if'),
+    nodemon = require('gulp-nodemon'),
     run = require('gulp-run');
 /**
  * Fügt module zusammen
@@ -62,7 +63,12 @@ gulp.task('browserify', function() {
  */
 gulp.task("server", function () {
     process.env.DEBUG=production?0:"ScriptHockey:*";
-    require("./bin/www");
+    //require("./bin/www");
+    nodemon({
+        script: './bin/www'
+        , ext: 'js hbs'
+        , env: { 'NODE_ENV': 'development' }
+    });
 });
 
 //Refresh
