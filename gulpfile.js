@@ -12,7 +12,7 @@
 var jsOutput = ['./public/javascripts/dist/**/*.js'];
 var cssFiles = ['./public/css/**/*.css'];
 var htmlFiles = ['./views/**/*.hbs'];
-var jsBrowserifyFiles = ['./public/javascripts/src/main.js', '/public/javascripts/src/**/*.js'];
+var jsBrowserifyFiles = ['./public/javascripts/src/main.js', './public/javascripts/src/**/*.js'];
 /**
  * Setz produktiv-Umgebung
  * zu setzen bei Aufruf
@@ -36,7 +36,7 @@ var gulp = require('gulp'),
 /**
  * Fügt module zusammen
  */
-gulp.task('browserify', function() {
+gulp.task('browserify', function () {
     return gulp.src(jsBrowserifyFiles[0])
         .pipe(through2.obj(function (file, enc, next) {
             browserify(file.path, {debug: !production})
@@ -62,12 +62,13 @@ gulp.task('browserify', function() {
  * Startet Server
  */
 gulp.task("server", function () {
-    process.env.DEBUG=production?0:"ScriptHockey:*";
+    process.env.DEBUG = production ? 0 : "ScriptHockey:*";
     //require("./bin/www");
     nodemon({
-        script: './bin/www'
-        , ext: 'js hbs'
-        , env: { 'NODE_ENV': 'development' }
+        script: './bin/www',
+        ext: 'js hbs',
+        watch: ['server_lib','views','routes'],
+        env: {'NODE_ENV': 'development'}
     });
 });
 
@@ -83,7 +84,7 @@ var refresh = function (f) {
 gulp.task('watch', ["server"], function () {
     livereload.listen({
         start: true,
-        quiet:false
+        quiet: false
     });
 
     //Starte Compass
@@ -100,4 +101,4 @@ gulp.task('watch', ["server"], function () {
 /**
  * Default-task:
  */
-gulp.task("default",["browserify"]);
+gulp.task("default", ["browserify"]);
