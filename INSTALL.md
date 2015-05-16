@@ -26,7 +26,7 @@ Mehr Informationen zu finden unter: http://livereload.com/extensions/
 Einige Module müssen global installiert werden
 
 ```bash
-npm install -g browserify gulp babel
+npm install -g browserify gulp babel karma-cli
 ```
 ## 1.3 Gems
 Wir sollten compass verwenden um einfacher mit Sprites umzugehen
