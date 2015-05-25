@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666;
-const DEBOUNCE_DELAY_MS=150;
+const DEBOUNCE_DELAY_MS=50;
 const VERT_UNITS=1000;
 const HORZ_UNITS=VERT_UNITS*RATIO;
 
@@ -19,15 +19,15 @@ const HORZ_UNITS=VERT_UNITS*RATIO;
 class Field {
     constructor() {
         "use strict";
-
+        this.fieldObjects=new Map();
         this.name = "Field";
         this.height = 0;
         this.width = 0;
-        this.fieldHTML = null;
+        this.fieldHTML = $("<section id=\"field\">");
 
         var fieldRef = this;
         $(window).resize(
-            $.debounce(DEBOUNCE_DELAY_MS, function () {
+            $.throttle(DEBOUNCE_DELAY_MS, function () {
                 fieldRef.build();
             })
         );
@@ -40,34 +40,10 @@ class Field {
      */
     _calcRatioSize() {
         "use strict";
-
         this.height = $("body").height();
         this.width = this.height * RATIO;
     }
 
-    /**
-     * Entfernt alles Spielfeld
-     * @param fieldRef
-     * @returns {*}
-     * @private
-     */
-    static _removeFromDom(fieldRef) {
-        "use strict";
-        if (fieldRef.fieldHTML !== null) {
-            $("#" + fieldRef.name.toLowerCase()).remove();
-        }
-        return fieldRef;
-    }
-
-    /**
-     * Fügt neues Spielfeld ein
-     * @param fieldRef
-     * @private
-     */
-    static _dropAtDom(fieldRef) {
-        "use strict";
-        $("body").append(fieldRef.fieldHTML);
-    }
 
     /**
      * Wandel Darstellungseinheiten in Pixel um
@@ -76,16 +52,24 @@ class Field {
      */
     static units2Pixel(unit){
         "use strict";
-        if(typeof unit !== "object" || isNaN(unit.x) || isNaN(unit.x)){
+        if(typeof unit !== "object" || isNaN(unit.y) || isNaN(unit.x)){
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
 
         return {x:0,y:0};
     }
 
+    /**
+     * Wandelt Piel in Darstellungseinheiten um
+     * @param {{x: number, y: number}} pixel
+     * @returns {{x: number, y: number}}
+     */
     static pixel2units(pixel){
         "use strict";
-
+        if(typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x)){
+            throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
+        }
+        return {x:0,y:0};
     }
     /**
      * Platziert das Feld im Browser
@@ -93,25 +77,17 @@ class Field {
     build() {
         "use strict";
         this._calcRatioSize();
-        var fieldRef = this;
+        //Entferne altes Spielfeld
+        if (this.fieldHTML !== null) {
+            $("#" + this.name.toLowerCase()).remove();
+        }
 
-        $.get("/" + this.name.toLowerCase())
-            .then((response)=>{
-                var jqResponse=$(response);
-                jqResponse.css({
-                    height: fieldRef.height,
-                    width: fieldRef.width,
-                    marginLeft: fieldRef.width * -.5 //4 center-alignment
-                });
-                fieldRef.fieldHTML =jqResponse;
-
-                return fieldRef;
-
-            },()=>{
-                throw new Error("Could not get field from server")
-            })
-            .then(Field._removeFromDom,null)
-            .then(Field._dropAtDom,null);
+        $("body").append(this.fieldHTML);
+        this.fieldHTML.css({
+            height: this.height,
+            width: this.width,
+            marginLeft: this.width * -.5 //4 center-alignment
+        });
     }
 
     /**

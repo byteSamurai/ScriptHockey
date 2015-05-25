@@ -8,20 +8,49 @@ var Field = require("./Field.js");
 class Coord {
     constructor() {
         "use strict";
-        this.px = {x: 0, y: 0};
+        this.pixel = {x: 0, y: 0};
         this.units = {x: 0, y: 0}
     }
 
+    /**
+     * Setzt Pixel
+     * @param {Number} x
+     * @param {Number} y
+     */
     setPixel(x, y) {
         "use strict";
-        this.px.x = x;
-        this.px.y = y;
-        this.units=Field.pixel2units(this.px);
+        this.pixel.x = x;
+        this.pixel.y = y;
+        this.units=Field.pixel2units(this.pixel);
     }
 
+    /**
+     * Setzt Darstellungseinheiten
+     * @param {Number} x
+     * @param {Number} y
+     */
     setUnits(x, y) {
         "use strict";
         this.units.x = x;
         this.units.y = y;
     }
+
+    /**
+     * Liefert Pixel-Kompontente der Koordinate
+     * @returns {Coord.pixel}
+     */
+    getPixel(){
+        "use strict";
+        return this.pixel;
+    }
+
+    /**
+     * Liefert Darstellungeinheit der Koordinate
+     * @returns {Coord.units|*}
+     */
+    getUnits(){
+        "use strict";
+        return this.units;
+    }
 }
+module.exports=Coord;

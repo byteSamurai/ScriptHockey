@@ -9,5 +9,12 @@ const velocity = -0.5; //ggf. später austauschen gegen Funktion f(t)
 
 class Puck extends GameObject{
 
+    constructor(){
+        "use strict";
+        super();
+
+        this.puckHTML=$("<b id=\"puck\" />");
+
+    }
 }
 module.exports=Puck;
