@@ -4,11 +4,13 @@
  * Time: 18:08
  */
 
-const RATIO = 0.666;
-const DEBOUNCE_DELAY_MS=50;
-const VERT_UNITS=1000;
-const HORZ_UNITS=VERT_UNITS*RATIO;
+const RATIO = 0.666666;
+const DEBOUNCE_DELAY_MS = 50;
+const VERT_UNITS = 1000;
+const HORZ_UNITS = VERT_UNITS * RATIO;
 
+let singleton = Symbol();
+let singletonEnforcer = Symbol();
 
 /**
  * Spielfeld
@@ -17,9 +19,13 @@ const HORZ_UNITS=VERT_UNITS*RATIO;
  *
  */
 class Field {
-    constructor() {
+    constructor(enforcer) {
         "use strict";
-        this.fieldObjects=new Map();
+        if (enforcer != singletonEnforcer) {
+            throw "Cannot construct singleton";
+        }
+
+        this.gameObjects = new Map();
         this.name = "Field";
         this.height = 0;
         this.width = 0;
@@ -32,6 +38,17 @@ class Field {
             })
         );
         this._calcRatioSize();
+    }
+
+    /**
+     * Spielfeld sollte nur eine Instanz sein
+     * @returns {*}
+     */
+    static get instance() {
+        if (this[singleton] === undefined) {
+            this[singleton] = new Field(singletonEnforcer);
+        }
+        return this[singleton];
     }
 
     /**
@@ -50,13 +67,19 @@ class Field {
      * @param {{x: number, y: number}} unit
      * @returns {{x: number, y: number}}
      */
-    static units2Pixel(unit){
+    static units2pixel(unit) {
         "use strict";
-        if(typeof unit !== "object" || isNaN(unit.y) || isNaN(unit.x)){
+        if (typeof unit !== "object" || isNaN(unit.y) || isNaN(unit.x)) {
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
+        let field = Field.instance;
+        let vertUnitRatio = unit.y / VERT_UNITS;
+        let horUnitRatio = unit.x / HORZ_UNITS;
 
-        return {x:0,y:0};
+        return {
+            x: field.getWidth() * horUnitRatio,
+            y: field.getHeight() * vertUnitRatio
+        };
     }
 
     /**
@@ -64,13 +87,29 @@ class Field {
      * @param {{x: number, y: number}} pixel
      * @returns {{x: number, y: number}}
      */
-    static pixel2units(pixel){
+    static pixel2units(pixel) {
         "use strict";
-        if(typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x)){
+        if (typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x)) {
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
-        return {x:0,y:0};
+        let field = Field.instance;
+        let heightRatio = pixel.y / field.getHeight();
+        let widthRatio = pixel.x / field.getWidth();
+
+        return {
+            x: widthRatio * HORZ_UNITS,
+            y: heightRatio * VERT_UNITS
+        };
     }
+
+    getWidth() {
+        return this.width;
+    }
+
+    getHeight() {
+        return this.height;
+    }
+
     /**
      * Platziert das Feld im Browser
      */
@@ -91,12 +130,15 @@ class Field {
     }
 
     /**
-     *
-     * @returns {number}
+     * Fügt neue Spielelemente hinzu
+     * @param gameObject
      */
-    getFieldHeight(){
+    deployGameObject(gameObject) {
         "use strict";
-        return this.height;
+        if (typeof gameObject !== "GameObject") {
+            throw new Error("Must be a gameobject");
+        }
+        this.gameObjects.add();
     }
 }
 module.exports = Field;

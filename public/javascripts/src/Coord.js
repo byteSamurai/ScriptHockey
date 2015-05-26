@@ -33,6 +33,7 @@ class Coord {
         "use strict";
         this.units.x = x;
         this.units.y = y;
+        this.pixel=Field.units2pixel(this.units);
     }
 
     /**
@@ -41,6 +42,7 @@ class Coord {
      */
     getPixel(){
         "use strict";
+        this.pixel=Field.units2pixel(this.units);
         return this.pixel;
     }
 
@@ -50,6 +52,7 @@ class Coord {
      */
     getUnits(){
         "use strict";
+        this.units=Field.pixel2units(this.pixel);
         return this.units;
     }
 }
