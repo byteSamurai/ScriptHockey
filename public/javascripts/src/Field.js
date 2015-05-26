@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const DEBOUNCE_DELAY_MS = 50;
+const REFRESH_RATE_MS = 200;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 
@@ -25,15 +25,15 @@ class Field {
             throw "Cannot construct singleton";
         }
 
-        this.gameObjects = new Map();
-        this.name = "Field";
-        this.height = 0;
-        this.width = 0;
-        this.fieldHTML = $("<section id=\"field\">");
+        this._gameObjects = new Map();
+        this._name = "Field";
+        this._height = 0;
+        this._width = 0;
+        this._fieldHTML = $("<section id=\"field\">");
 
         var fieldRef = this;
         $(window).resize(
-            $.throttle(DEBOUNCE_DELAY_MS, function () {
+            $.throttle(REFRESH_RATE_MS, function () {
                 fieldRef.build();
             })
         );
@@ -57,8 +57,8 @@ class Field {
      */
     _calcRatioSize() {
         "use strict";
-        this.height = $("body").height();
-        this.width = this.height * RATIO;
+        this._height = $("body").height();
+        this._width = this._height * RATIO;
     }
 
 
@@ -77,8 +77,8 @@ class Field {
         let horUnitRatio = unit.x / HORZ_UNITS;
 
         return {
-            x: field.getWidth() * horUnitRatio,
-            y: field.getHeight() * vertUnitRatio
+            x: field.width * horUnitRatio,
+            y: field.height * vertUnitRatio
         };
     }
 
@@ -93,8 +93,8 @@ class Field {
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
-        let heightRatio = pixel.y / field.getHeight();
-        let widthRatio = pixel.x / field.getWidth();
+        let heightRatio = pixel.y / field.height;
+        let widthRatio = pixel.x / field.width;
 
         return {
             x: widthRatio * HORZ_UNITS,
@@ -102,12 +102,12 @@ class Field {
         };
     }
 
-    getWidth() {
-        return this.width;
+    get width() {
+        return this._width;
     }
 
-    getHeight() {
-        return this.height;
+    get height() {
+        return this._height;
     }
 
     /**
@@ -117,16 +117,35 @@ class Field {
         "use strict";
         this._calcRatioSize();
         //Entferne altes Spielfeld
-        if (this.fieldHTML !== null) {
-            $("#" + this.name.toLowerCase()).remove();
+        if (this._fieldHTML !== null) {
+            $("#" + this._name.toLowerCase()).remove();
         }
 
-        $("body").append(this.fieldHTML);
-        this.fieldHTML.css({
-            height: this.height,
-            width: this.width,
-            marginLeft: this.width * -.5 //4 center-alignment
+        $("body").append(this._fieldHTML);
+        this._fieldHTML.css({
+            height: this._height,
+            width: this._width,
+            marginLeft: this._width * -.5 //4 center-alignment
         });
+
+        this._gameObjects.forEach((e)=>{
+            console.log(e);
+            $("#field").append(e.html);
+        });
+    }
+
+    /**
+     * Zeichnet alle Gameobjects ein
+     */
+    play(){
+        "use strict";
+        window.setInterval(()=>{
+            this._gameObjects.forEach((e,i)=>{
+                e.calcPosition();
+                console.log(e.coord.unit);
+            });
+        },REFRESH_RATE_MS);
+
     }
 
     /**
@@ -135,10 +154,11 @@ class Field {
      */
     deployGameObject(gameObject) {
         "use strict";
-        if (typeof gameObject !== "GameObject") {
+        if (gameObject.type !== "GameObject") {
             throw new Error("Must be a gameobject");
         }
-        this.gameObjects.add();
+        gameObject.calcPosition();
+        this._gameObjects.set(gameObject.name,gameObject);
     }
 }
 module.exports = Field;

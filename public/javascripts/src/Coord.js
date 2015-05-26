@@ -8,52 +8,53 @@ var Field = require("./Field.js");
 class Coord {
     constructor() {
         "use strict";
-        this.pixel = {x: 0, y: 0};
-        this.units = {x: 0, y: 0}
+        this._pixel = {x: 0, y: 0};
+        this._unit = {x: 0, y: 0}
     }
 
     /**
      * Setzt Pixel
-     * @param {Number} x
-     * @param {Number} y
+     * @param {{x:number,y:number}} xyObject
      */
-    setPixel(x, y) {
+    set pixel(xyObject) {
         "use strict";
-        this.pixel.x = x;
-        this.pixel.y = y;
-        this.units=Field.pixel2units(this.pixel);
+        if (typeof xyObject !== "object" || isNaN(xyObject.y) || isNaN(xyObject.x)) {
+            throw new Error("pixel must be an object with a x and y component");
+        }
+        this._pixel=xyObject;
+        this._unit=Field.pixel2units(this._pixel);
+    }
+    /**
+     * Liefert Pixel-Kompontente der Koordinate
+     * @returns {{x:number,y:number}}
+     */
+    get pixel(){
+        "use strict";
+        this._pixel=Field.units2pixel(this._unit);
+        return this._pixel;
     }
 
     /**
      * Setzt Darstellungseinheiten
-     * @param {Number} x
-     * @param {Number} y
+     * @param {{x:number,y:number}} xyObject
      */
-    setUnits(x, y) {
+    set unit(xyObject) {
         "use strict";
-        this.units.x = x;
-        this.units.y = y;
-        this.pixel=Field.units2pixel(this.units);
-    }
-
-    /**
-     * Liefert Pixel-Kompontente der Koordinate
-     * @returns {Coord.pixel}
-     */
-    getPixel(){
-        "use strict";
-        this.pixel=Field.units2pixel(this.units);
-        return this.pixel;
+        if (typeof xyObject !== "object" || isNaN(xyObject.y) || isNaN(xyObject.x)) {
+            throw new Error("unit must be an object with a x and y component");
+        }
+        this._unit=xyObject;
+        this._pixel=Field.units2pixel(this._unit);
     }
 
     /**
      * Liefert Darstellungeinheit der Koordinate
-     * @returns {Coord.units|*}
+     * @returns {{x:number,y:number}}
      */
-    getUnits(){
+    get unit(){
         "use strict";
-        this.units=Field.pixel2units(this.pixel);
-        return this.units;
+        this._unit=Field.pixel2units(this._pixel);
+        return this._unit;
     }
 }
 module.exports=Coord;

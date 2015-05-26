@@ -1,0 +1,9 @@
+b#puck{
+   display: block;
+   height: 16px;
+   width: 16px;
+   @include border-radius(8px);
+   background-color: black;
+   position: relative;
+   @include transition(all 200ms linear)
+}
