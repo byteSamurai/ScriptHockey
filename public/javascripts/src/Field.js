@@ -168,9 +168,9 @@ class Field {
         this._gameObjects.forEach((e)=> {
             //Überlauf rechts
             if (e.coord.unit.x + e.puckSize.unit.x > HORZ_UNITS) {
-                e.moveTo.multiply(new Coord(-1,0));
-            }else if(e.coord.unit.x < 0){
-                e.moveTo.multiply(new Coord(-1,0));
+                e.moveTo.multiply(new Coord(-1, 0));
+            } else if (e.coord.unit.x < 0) {
+                e.moveTo.multiply(new Coord(-1, 0));
             }
 
 
