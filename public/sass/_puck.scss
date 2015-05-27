@@ -1,9 +1,7 @@
 b#puck{
    display: block;
-   height: 16px;
-   width: 16px;
-   @include border-radius(8px);
+   @include border-radius(1000px); // yes, 1000px is correct!
    background-color: black;
    position: relative;
-   @include transition(all 200ms linear)
+   @include transition(all 1000ms linear)
 }

@@ -7,31 +7,25 @@ function errorNotification(mess) {
 
 }
 
+var Field = require("./Field");
+var Puck = require("./Puck");
+var Coord = require("./Coord");
+
 
 $(function () {
     //Zeichne Spielfeld
-    var Field = require("./Field");
+
     var field = Field.instance;
-
-
-
-    var Puck = require("./Puck");
     var puck = new Puck();
+    let startPuckCoord = new Coord(0,80);
+
+    let moveToCoord = new Coord(100,0);
+    puck.coord = startPuckCoord;
+    puck.moveTo = moveToCoord;
 
     field.deployGameObject(puck);
     field.build();
     field.play();
-
-    var Coord = require("./Coord");
-    var coord = new Coord();
-    coord.unit={x:50,y:100};
-
-    var dot=$("<span id=\"dot\">.</span>").css({
-        position:"relative",
-        top: coord.pixel.y,
-        left: coord.pixel.x
-    });
-
 
 });
 

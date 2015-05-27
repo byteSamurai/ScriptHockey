@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 200;
+const REFRESH_RATE_MS = 1000;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 
@@ -20,6 +20,7 @@ let singletonEnforcer = Symbol();
  */
 class Field {
     constructor(enforcer) {
+
         "use strict";
         if (enforcer != singletonEnforcer) {
             throw "Cannot construct singleton";
@@ -31,13 +32,13 @@ class Field {
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
 
-        var fieldRef = this;
+        this._calcRatioSize();
+
         $(window).resize(
-            $.throttle(REFRESH_RATE_MS, function () {
-                fieldRef.build();
+            $.throttle(REFRESH_RATE_MS, ()=> {
+                this.build();
             })
         );
-        this._calcRatioSize();
     }
 
     /**
@@ -128,8 +129,7 @@ class Field {
             marginLeft: this._width * -.5 //4 center-alignment
         });
 
-        this._gameObjects.forEach((e)=>{
-            console.log(e);
+        this._gameObjects.forEach((e)=> {
             $("#field").append(e.html);
         });
     }
@@ -137,15 +137,14 @@ class Field {
     /**
      * Zeichnet alle Gameobjects ein
      */
-    play(){
+    play() {
         "use strict";
-        window.setInterval(()=>{
-            this._gameObjects.forEach((e,i)=>{
+        window.setInterval(()=> {
+            this._gameObjects.forEach((e)=> {
                 e.calcPosition();
-                console.log(e.coord.unit);
             });
-        },REFRESH_RATE_MS);
-
+            this.solveCollisions();
+        }, REFRESH_RATE_MS);
     }
 
     /**
@@ -157,8 +156,25 @@ class Field {
         if (gameObject.type !== "GameObject") {
             throw new Error("Must be a gameobject");
         }
-        gameObject.calcPosition();
-        this._gameObjects.set(gameObject.name,gameObject);
+        gameObject.setPosition();
+        this._gameObjects.set(gameObject.name, gameObject);
+    }
+
+    /**
+     * Löst kollisionen auf
+     */
+    solveCollisions() {
+        var Coord = require("./Coord");
+        this._gameObjects.forEach((e)=> {
+            //Überlauf rechts
+            if (e.coord.unit.x + e.puckSize.unit.x > HORZ_UNITS) {
+                e.moveTo.multiply(new Coord(-1,0));
+            }else if(e.coord.unit.x < 0){
+                e.moveTo.multiply(new Coord(-1,0));
+            }
+
+
+        });
     }
 }
 module.exports = Field;

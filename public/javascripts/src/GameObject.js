@@ -1,40 +1,64 @@
-let Coord= require("./Coord");
-class GameObject{
-    constructor(name) {
+let Coord = require("./Coord");
+class GameObject {
+    constructor(name, html) {
         "use strict";
-        this._coord=new Coord();
-        this._name=name;
-        this._type="GameObject";
-        this._movement={
-            x:30,
-            y:50
-        }
+        this._coord = new Coord();
+        this._name = name;
+        this._type = "GameObject";
+        this._html = html;
+        this._moveTo = new Coord();
 
     }
-    get type(){
+
+    get type() {
         "use strict";
         return this._type;
     }
-    set movement(XYobject){
+    get moveTo(){
         "use strict";
-        this._movement=XYobject;
+        return this._moveTo;
     }
-    calcPosition(){
+    set moveTo(coords) {
         "use strict";
-        let pos=this._coord.unit;
-
-        this.coord.unit={
-            x:pos.x+this._movement.x,
-            y:pos.y+this._movement.y
+        if (coords.type !== "Coord") {
+            throw new Error("Must be a Coord");
         }
+
+        this._moveTo = coords;
     }
-    get name(){
+
+    setPosition() {
+        "use strict";
+        this._html.css({
+            top: this._coord.pixel.y,
+            left: this._coord.pixel.x
+        })
+    }
+
+    calcPosition() {
+        "use strict";
+        this.coord.add(this._moveTo);
+    }
+
+    get name() {
         "use strict";
         return this._name;
     }
-    get coord(){
+
+    get coord() {
         "use strict";
+
         return this._coord;
     }
+
+    set coord(coord) {
+        "use strict";
+        this._coord = coord;
+    }
+
+    get html() {
+        "use strict";
+        return this._html;
+    }
 }
-module.exports=GameObject;
+module.exports = GameObject;
