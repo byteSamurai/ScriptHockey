@@ -35,7 +35,7 @@ class GameObject {
 
     /**
      * Winkel, der Bewegungsrichtung
-     * 0° == recht, 90° == oben
+     * 0° == recht, 90° == unten
      * @param {number} angle
      */
     set moveTo(angle) {

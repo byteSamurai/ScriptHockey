@@ -13,9 +13,9 @@ $(function () {
     let field = Field.instance;
     let puck = new Puck();
 
-    puck.coord = new Coord(0, 80);
+    puck.coord = new Coord(150, 150);
     puck.speed = 5;
-    puck.moveTo = 45; // nach links bitte
+    puck.moveTo = 45; // nach rechts bitte
 
     field.deployGameObject(puck);
     field.build();

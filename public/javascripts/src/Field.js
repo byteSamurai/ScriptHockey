@@ -5,8 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 30;
-const COLLIDING_DETECTION_RATE = 10;
+const REFRESH_RATE_MS = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 
@@ -173,19 +172,40 @@ class Field {
             let ePos = e.coord.unit;
             let eSize = e.size.unit;
 
-            //console.log(e.coord.unit, e.size.unit, HORZ_UNITS);
-
+            //Left border
             if (ePos.x + eSize.x > HORZ_UNITS) {
+                //Setzte Puck an die Wand
                 e.coord = new Coord(HORZ_UNITS - e.size.unit.x, e.coord.unit.y);
                 e.setPosition();
-                e.moveTo.multiply(new Coord(-1, 0));
-            } else if (ePos.x < 0) {
-                e.moveTo.multiply(new Coord(-1, 0));
-                e.coord = new Coord(0, e.coord.unit.y);
+
+                //quirky
+                e.moveTo = this.collisionDirection(e.moveTo, 0.5 * Math.PI);
+            } else
+            // Right border?
+            if (ePos.x < 0) {
+                e.moveTo = this.collisionDirection(e.moveTo, 1.5 * Math.PI);
+            }
+
+            //Bottom border
+            if (ePos.y + eSize.y > VERT_UNITS) {
+                e.coord = new Coord(e.coord.unit.x, VERT_UNITS - e.size.unit.y);
                 e.setPosition();
+                e.moveTo = this.collisionDirection(e.moveTo, Math.PI);
+            } else
+            //Top border
+            if (ePos.y < 0) {
+                e.moveTo = this.collisionDirection(e.moveTo, Math.PI);
             }
 
         });
+    }
+
+    collisionDirection(originAngle, collidingAngle) {
+        "use strict";
+        let colAngle = collidingAngle * (180 / Math.PI);
+        let orgAngle = originAngle * (180 / Math.PI);
+        let dAngle = 2 * colAngle - 2 * orgAngle;
+        return (360 + orgAngle + dAngle) % 360;
     }
 }
 module.exports = Field;
