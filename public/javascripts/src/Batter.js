@@ -10,7 +10,7 @@ const BATTER_RADIUS_UNITS = 32;
 class Batter extends GameObject {
     constructor(name, facing) {
         "use strict";
-        super(name, $("<b id=\"batter_" + name + "\" />"), BATTER_RADIUS_UNITS * 2, BATTER_RADIUS_UNITS * 2);
+        super(name, $('<b id="batter_' + name + '" class="batters"/>'), BATTER_RADIUS_UNITS * 2, BATTER_RADIUS_UNITS * 2);
         this._facing = facing;
         this.pixeledRadius = Field.units2pixel(BATTER_RADIUS_UNITS);
 
@@ -58,24 +58,24 @@ class Batter extends GameObject {
 
 
         let mouseYunits = Field.pixel2units(mouseY);
-        yCoord = mouseYunits - BATTER_RADIUS_UNITS * 2;
+        yCoord = mouseYunits - BATTER_RADIUS_UNITS;
 
         if (this._facing == 'bottom') {
 
-            if (mouseYunits <= (Field.unitHeight / 2 ) + BATTER_RADIUS_UNITS * 2) { //Oberkante-Feldmitte
+            if (mouseYunits <= (Field.unitHeight / 2 ) + BATTER_RADIUS_UNITS) { //Oberkante-Feldmitte
                 yCoord = Field.unitHeight / 2;
             } else if (mouseYunits > Field.unitHeight - BATTER_RADIUS_UNITS) {
-                yCoord = Field.unitHeight - BATTER_RADIUS_UNITS * 3;
+                yCoord = Field.unitHeight - BATTER_RADIUS_UNITS * 2;
             }
         }
 
-        //if (this._facing == 'top') {
-        //    if (mouseY >= (field.height / 2 - this.pixeledRadius)) {
-        //        yCoord = Field.pixel2units(field.height / 2 - this.pixeledRadius) - BATTER_RADIUS_UNITS;
-        //    } else {
-        //        yCoord = Field.pixel2units(mouseX - fieldLeftOffset) - BATTER_RADIUS_UNITS;
-        //    }
-        //}
+        if (this._facing == 'top') {
+            if (mouseY >= (field.height / 2 - this.pixeledRadius)) { //Unterkante-Feldmitte
+                yCoord = Field.pixel2units(field.height / 2 - this.pixeledRadius) - BATTER_RADIUS_UNITS;
+            } else if (mouseY < BATTER_RADIUS_UNITS / 2) {
+                yCoord = 0;
+            }
+        }
 
 
         //console.log(mouseX + ', ' + field.html.css('left'));

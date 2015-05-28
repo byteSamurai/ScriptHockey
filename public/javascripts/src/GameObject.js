@@ -49,10 +49,12 @@ class GameObject {
 
     setPosition() {
         "use strict";
-        this._html.css({
-            top: this._coord.pixel.y,
-            left: this._coord.pixel.x
-        })
+        let domobject = this._html[0];
+        domobject.style.transform = "translate(" + this._coord.pixel.x + "px," + this._coord.pixel.y + "px)";
+        //this._html.css({
+        //    top: this._coord.pixel.y,
+        //    left: this._coord.pixel.x
+        //})
     }
 
     calcPosition() {

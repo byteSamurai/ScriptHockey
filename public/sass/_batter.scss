@@ -2,12 +2,12 @@ b#batter_player1{
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #aa333f;
-  position: relative;
+  position: absolute;
 }
 
 b#batter_player2{
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #34aa32;
-  position: relative;
+  position: absolute;
 }

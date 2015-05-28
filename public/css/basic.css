@@ -12,7 +12,7 @@ b#puck {
     -webkit-border-radius: 1000px;
     border-radius: 1000px;
     background-color: black;
-    position: relative
+    position: absolute
 }
 
 b#batter_player1 {
@@ -21,7 +21,7 @@ b#batter_player1 {
     -webkit-border-radius: 1000px;
     border-radius: 1000px;
     background-color: #aa333f;
-    position: relative
+    position: absolute
 }
 
 b#batter_player2 {
@@ -30,7 +30,7 @@ b#batter_player2 {
     -webkit-border-radius: 1000px;
     border-radius: 1000px;
     background-color: #34aa32;
-    position: relative
+    position: absolute
 }
 
 html, body {

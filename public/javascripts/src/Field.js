@@ -186,8 +186,9 @@ class Field {
         window.setInterval(()=> {
             this._gameObjects.forEach((e)=> {
                 e.calcPosition();
-                this.solveCollisions();
+                this.solveBorderCollisions();
             });
+            $(window).trigger("game:tick");
 
         }, REFRESH_RATE_MS);
 
@@ -209,9 +210,12 @@ class Field {
     /**
      * Löst kollisionen auf
      */
-    solveCollisions() {
+    solveBorderCollisions() {
         var Coord = require("./Coord");
         this._gameObjects.forEach((e)=> {
+            if (e.name !== "Puck") {
+                return
+            }
             //Überlauf rechts
             let ePos = e.coord.unit;
             let eSize = e.size.unit;
