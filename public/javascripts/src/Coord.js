@@ -134,5 +134,21 @@ class Coord {
         "use strict";
         return this._unit;
     }
+
+    /**
+     * Aktualisiert pixel von units ausgehend
+     */
+    refreshFromUnits() {
+        "use strict";
+        this._pixel = Field.units2pixel(this._unit);
+    }
+
+    /**
+     * Aktualisiert units von pixel ausgehend
+     */
+    refreshFromPixels() {
+        "use strict";
+        this._unit = Field.pixel2units(this._pixel);
+    }
 }
 module.exports = Coord;

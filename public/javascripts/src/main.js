@@ -1,5 +1,5 @@
 //Not used anymore
-require("./__techdemo");
+//require("./__techdemo");
 
 
 var Field = require("./Field");

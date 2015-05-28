@@ -15,13 +15,16 @@ class Puck extends GameObject {
         "use strict";
         super("Puck", $("<b id=\"puck\" />"), PUCK_RADIUS_UNITS * 2, PUCK_RADIUS_UNITS * 2);
 
+        $(window).on("resize", ()=> {
 
+            super.size.refreshFromUnits();
 
+            super.html.css({
+                width: super.size.pixel.x,
+                height: super.size.pixel.y
+            });
+        }).trigger("resize");
 
-        super.html.css({
-            width: super.size.pixel.x,
-            height: super.size.pixel.y
-        });
     }
 
     get baseType() {

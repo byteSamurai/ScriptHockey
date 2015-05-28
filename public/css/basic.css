@@ -1,2 +1,45 @@
-#users{font-weight:bold;text-transform:uppercase;position:fixed;bottom:0;padding:5px;right:0}section#field{top:0;left:50%;position:fixed;display:block;background:#aaa}b#puck{display:block;-moz-border-radius:1000px;-webkit-border-radius:1000px;border-radius:1000px;background-color:black;position:relative}b#batter_player1{display:block;-moz-border-radius:1000px;-webkit-border-radius:1000px;border-radius:1000px;background-color:#aa333f;position:relative}b#batter_player2{display:block;-moz-border-radius:1000px;-webkit-border-radius:1000px;border-radius:1000px;background-color:#34aa32;position:relative}html,body{height:100%}body{margin:0;padding:0;overflow:hidden}
+section#field {
+    top: 0;
+    left: 50%;
+    position: fixed;
+    display: block;
+    background: #aaa
+}
+
+b#puck {
+    display: block;
+    -moz-border-radius: 1000px;
+    -webkit-border-radius: 1000px;
+    border-radius: 1000px;
+    background-color: black;
+    position: relative
+}
+
+b#batter_player1 {
+    display: block;
+    -moz-border-radius: 1000px;
+    -webkit-border-radius: 1000px;
+    border-radius: 1000px;
+    background-color: #aa333f;
+    position: relative
+}
+
+b#batter_player2 {
+    display: block;
+    -moz-border-radius: 1000px;
+    -webkit-border-radius: 1000px;
+    border-radius: 1000px;
+    background-color: #34aa32;
+    position: relative
+}
+
+html, body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden
+}
 /*# sourceMappingURL=basic.css.map */

@@ -5,8 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 30;
-const COLLIDING_DETECTION_RATE = 10;
+const REFRESH_RATE_MS = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 
@@ -75,7 +74,6 @@ class Field {
             throw new Error("units2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
-        
 
         if (typeof unit == "number") {
             return unit / HORZ_UNITS * field.width;
@@ -97,13 +95,14 @@ class Field {
      */
     static pixel2units(pixel) {
         "use strict";
-        if (typeof unit !== "number" && (typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x))) {
+        if (typeof pixel !== "number" && (typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x))) {
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
 
-        if (typeof unit == "number") {
-            return pixel.x / field.width * HORZ_UNITS;
+
+        if (typeof pixel == "number") {
+            return pixel / field.width * HORZ_UNITS;
         } else {
             let heightRatio = pixel.y / field.height;
             let widthRatio = pixel.x / field.width;
@@ -115,12 +114,45 @@ class Field {
         }
     }
 
+    /**
+     * Weite in Pixel
+     * @returns {number}
+     */
     get width() {
+        "use strict";
         return this._width;
     }
 
+    /**
+     * Höhe in Pixel
+     * @returns {number}
+     */
     get height() {
+        "use strict";
         return this._height;
+    }
+
+    /**
+     * Höhe in Units
+     * @returns {number}
+     */
+    static get unitHeight() {
+        "use strict";
+        return VERT_UNITS;
+    }
+
+    /**
+     * Weite in Units
+     * @returns {number}
+     */
+    static get unitWidth() {
+        "use strict";
+        return HORZ_UNITS;
+    }
+
+    get html() {
+        "use strict";
+        return this._fieldHTML;
     }
 
     /**
@@ -184,35 +216,45 @@ class Field {
             let ePos = e.coord.unit;
             let eSize = e.size.unit;
 
-            //Left border
+            //Right border
             if (ePos.x + eSize.x > HORZ_UNITS) {
                 //Setzte Puck an die Wand
                 e.coord = new Coord(HORZ_UNITS - e.size.unit.x, e.coord.unit.y);
                 e.setPosition();
 
                 //quirky
-                e.moveTo = this.collisionDirection(e.moveTo, 0.5 * Math.PI);
+                e.moveTo = Field.collisionDirection(e.moveTo, 0.5 * Math.PI);
             } else
-            // Right border?
+            // Left border?
             if (ePos.x < 0) {
-                e.moveTo = this.collisionDirection(e.moveTo, 1.5 * Math.PI);
+                e.coord = new Coord(0, e.coord.unit.y);
+                e.setPosition();
+                e.moveTo = Field.collisionDirection(e.moveTo, 1.5 * Math.PI);
             }
 
             //Bottom border
             if (ePos.y + eSize.y > VERT_UNITS) {
                 e.coord = new Coord(e.coord.unit.x, VERT_UNITS - e.size.unit.y);
                 e.setPosition();
-                e.moveTo = this.collisionDirection(e.moveTo, Math.PI);
+                e.moveTo = Field.collisionDirection(e.moveTo, Math.PI);
             } else
             //Top border
             if (ePos.y < 0) {
-                e.moveTo = this.collisionDirection(e.moveTo, Math.PI);
+                e.coord = new Coord(e.coord.unit.x, 0);
+                e.setPosition();
+                e.moveTo = Field.collisionDirection(e.moveTo, Math.PI);
             }
 
         });
     }
 
-    collisionDirection(originAngle, collidingAngle) {
+    /**
+     * Berechnet Austrittswinkel
+     * @param originAngle
+     * @param collidingAngle
+     * @returns {number}
+     */
+    static collisionDirection(originAngle, collidingAngle) {
         "use strict";
         let colAngle = collidingAngle * (180 / Math.PI);
         let orgAngle = originAngle * (180 / Math.PI);
@@ -220,9 +262,6 @@ class Field {
         return (360 + orgAngle + dAngle) % 360;
     }
 
-    get html() {
-        "use strict";
-        return this._fieldHTML;
-    }
+
 }
 module.exports = Field;
