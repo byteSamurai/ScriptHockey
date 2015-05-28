@@ -17,6 +17,7 @@ class Puck extends GameObject {
 
 
 
+
         super.html.css({
             width: super.size.pixel.x,
             height: super.size.pixel.y
@@ -53,6 +54,7 @@ class Puck extends GameObject {
         "use strict";
         return super.size;
     }
+
 
 }
 module.exports = Puck;

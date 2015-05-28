@@ -1,4 +1,5 @@
 let Coord = require("./Coord");
+
 class GameObject {
     constructor(name, html, xSize, ySize) {
         "use strict";
@@ -7,7 +8,9 @@ class GameObject {
         this._name = name;
         this._type = "GameObject";
         this._html = html;
-        this._moveTo = new Coord();
+
+        this._moveTo = 0;
+        this._speed = 5;
 
     }
 
@@ -21,18 +24,27 @@ class GameObject {
         return this._size;
     }
 
+    /**
+     * Winkel der BEwegungsrichtung in rad!
+     * @returns {number}
+     */
     get moveTo() {
         "use strict";
         return this._moveTo;
     }
 
-    set moveTo(coords) {
+    /**
+     * Winkel, der Bewegungsrichtung
+     * 0° == recht, 90° == oben
+     * @param {number} angle
+     */
+    set moveTo(angle) {
         "use strict";
-        if (coords.type !== "Coord") {
-            throw new Error("Must be a Coord");
+        if (typeof angle !== "number" || angle < 0 || angle > 360) {
+            throw new Error("Must be an Integer between 0° and 360°");
         }
-        //coords.divide(new Coord(100,100));
-        this._moveTo = coords;
+
+        this._moveTo = (Math.PI / 180) * angle;
     }
 
     setPosition() {
@@ -45,7 +57,7 @@ class GameObject {
 
     calcPosition() {
         "use strict";
-        this.coord.add(this._moveTo);
+        this.coord.add(this.speedAsCoord);
     }
 
     get name() {
@@ -67,6 +79,43 @@ class GameObject {
     get html() {
         "use strict";
         return this._html;
+    }
+
+    /**
+     * Liefert die Geschwindigkeit in X/Y-Komponente
+     */
+    get speedAsCoord() {
+        "use strict";
+        //Polarkoordinaten-Konversion
+        let x = Math.cos(this._moveTo) * this._speed;
+        let y = Math.sin(this._moveTo) * this._speed;
+        // runden
+        x = Math.round(x * 100) / 100;
+        y = Math.round(y * 100) / 100;
+
+        return new Coord(x, y)
+    }
+
+    /**
+     * Geschwindigkeit/zurückgelegte Distanz je Tick
+     * @returns {int}
+     */
+    get speed() {
+        "use strict";
+        return this._speed;
+    }
+
+    /**
+     * Geschwindigkeit/zurückgelegte Distanz je Tick
+     * @param {int} speedValue
+     */
+    set speed(speedValue) {
+        "use strict";
+
+        if (typeof speedValue !== "number") {
+            throw Error("Muss be a integer")
+        }
+        this._speed = speedValue;
     }
 }
 module.exports = GameObject;

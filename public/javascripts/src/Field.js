@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 1000;
+const REFRESH_RATE_MS = 30;
 const COLLIDING_DETECTION_RATE = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
@@ -173,7 +173,7 @@ class Field {
             let ePos = e.coord.unit;
             let eSize = e.size.unit;
 
-            console.log(e.coord.unit, e.size.unit, HORZ_UNITS);
+            //console.log(e.coord.unit, e.size.unit, HORZ_UNITS);
 
             if (ePos.x + eSize.x > HORZ_UNITS) {
                 e.coord = new Coord(HORZ_UNITS - e.size.unit.x, e.coord.unit.y);

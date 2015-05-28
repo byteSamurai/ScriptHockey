@@ -10,13 +10,12 @@ var Coord = require("./Coord");
 $(function () {
     //Zeichne Spielfeld
 
-    var field = Field.instance;
-    var puck = new Puck();
-    let startPuckCoord = new Coord(0,80);
+    let field = Field.instance;
+    let puck = new Puck();
 
-    let moveToCoord = new Coord(150, 0);
-    puck.coord = startPuckCoord;
-    puck.moveTo = moveToCoord;
+    puck.coord = new Coord(0, 80);
+    puck.speed = 5;
+    puck.moveTo = 45; // nach links bitte
 
     field.deployGameObject(puck);
     field.build();
