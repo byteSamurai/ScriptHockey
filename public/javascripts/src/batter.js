@@ -66,7 +66,11 @@ class Batter extends GameObject {
                 yCoord = Field.instance._height / 2;
                 console.log(this._facing);
             } else {
-                yCoord = mouseY;
+                let coordDump = {
+                    x: mouseX - fieldLeftOffset,
+                    y: mouseY
+                };
+                yCoord = Field.pixel2units(coordDump).y - BATTER_RADIUS_UNITS;
             }
         }
 

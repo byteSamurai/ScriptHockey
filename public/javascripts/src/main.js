@@ -14,7 +14,7 @@ $(function () {
     let puck = new Puck();
 
     puck.coord = new Coord(0, 80);
-    puck.speed = 5;
+    puck.speed = 15;
     puck.moveTo = 45; // nach links bitte
 
     //var player1 = new Batter('player1', 'top');
