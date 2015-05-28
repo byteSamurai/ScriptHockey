@@ -21,6 +21,8 @@ $(function () {
     field.build();
     field.play();
 
+    console.log(Field.units2pixel(3));
+
 });
 
 

@@ -65,42 +65,52 @@ class Field {
 
     /**
      * Wandel Darstellungseinheiten in Pixel um
-     * @param {{x: number, y: number}} unit
-     * @returns {{x: number, y: number}}
+     * @param {{x: number, y: number} | number} unit
+     * @returns {{x: number, y: number} | number}
      */
     static units2pixel(unit) {
         "use strict";
-        if (typeof unit !== "object" || isNaN(unit.y) || isNaN(unit.x)) {
-            throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
+        if (typeof unit !== "number" && (typeof unit !== "object" || isNaN(unit.y) || isNaN(unit.x))) {
+            throw new Error("units2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
-        let vertUnitRatio = unit.y / VERT_UNITS;
-        let horUnitRatio = unit.x / HORZ_UNITS;
 
-        return {
-            x: field.width * horUnitRatio,
-            y: field.height * vertUnitRatio
-        };
+        if (typeof unit == "number") {
+            return unit / HORZ_UNITS * field.width;
+        } else {
+            let vertUnitRatio = unit.y / VERT_UNITS;
+            let horUnitRatio = unit.x / HORZ_UNITS;
+
+            return {
+                x: field.width * horUnitRatio,
+                y: field.height * vertUnitRatio
+            };
+        }
     }
 
     /**
      * Wandelt Piel in Darstellungseinheiten um
-     * @param {{x: number, y: number}} pixel
-     * @returns {{x: number, y: number}}
+     * @param {{x: number, y: number} | number} pixel
+     * @returns {{x: number, y: number} | number}
      */
     static pixel2units(pixel) {
         "use strict";
-        if (typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x)) {
+        if (typeof unit !== "number" && (typeof pixel !== "object" || isNaN(pixel.y) || isNaN(pixel.x))) {
             throw new Error("unit2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
-        let heightRatio = pixel.y / field.height;
-        let widthRatio = pixel.x / field.width;
 
-        return {
-            x: widthRatio * HORZ_UNITS,
-            y: heightRatio * VERT_UNITS
-        };
+        if (typeof unit == "number") {
+            return pixel.x / field.width * HORZ_UNITS;
+        } else {
+            let heightRatio = pixel.y / field.height;
+            let widthRatio = pixel.x / field.width;
+
+            return {
+                x: widthRatio * HORZ_UNITS,
+                y: heightRatio * VERT_UNITS
+            };
+        }
     }
 
     get width() {
