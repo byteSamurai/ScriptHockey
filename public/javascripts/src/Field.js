@@ -5,7 +5,8 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 10;
+const REFRESH_RATE_MS = 30;
+const COLLIDING_DETECTION_RATE = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 
@@ -74,6 +75,7 @@ class Field {
             throw new Error("units2pixel must get a object as parameter with x and y as a Number");
         }
         let field = Field.instance;
+        
 
         if (typeof unit == "number") {
             return unit / HORZ_UNITS * field.width;
@@ -216,6 +218,11 @@ class Field {
         let orgAngle = originAngle * (180 / Math.PI);
         let dAngle = 2 * colAngle - 2 * orgAngle;
         return (360 + orgAngle + dAngle) % 360;
+    }
+
+    get html() {
+        "use strict";
+        return this._fieldHTML;
     }
 }
 module.exports = Field;
