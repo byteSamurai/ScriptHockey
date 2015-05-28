@@ -13,13 +13,13 @@ class Puck extends GameObject {
 
     constructor() {
         "use strict";
-        super("Puck", $("<b id=\"puck\" />"));
+        super("Puck", $("<b id=\"puck\" />"), PUCK_RADIUS_UNITS * 2, PUCK_RADIUS_UNITS * 2);
 
-        this._puckSize = new Coord(PUCK_RADIUS_UNITS*2,PUCK_RADIUS_UNITS*2);
+
 
         super.html.css({
-            width: this._puckSize.pixel.x,
-            height: this._puckSize.pixel.y
+            width: super.size.pixel.x,
+            height: super.size.pixel.y
         });
     }
 
@@ -49,9 +49,9 @@ class Puck extends GameObject {
      * Liefert die Puck-größe
      * @returns {Coord}
      */
-    get puckSize(){
+    get size() {
         "use strict";
-        return this._puckSize;
+        return super.size;
     }
 
 }

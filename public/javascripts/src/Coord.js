@@ -21,7 +21,6 @@ class Coord {
         this._pixel = {x: 0, y: 0};
         this._unit = {x: 0, y: 0};
 
-
         if (type === UNITS) {
             this.unit = {x: x, y: y};
             this._pixel = Field.units2pixel(this._unit);

@@ -1,8 +1,9 @@
 let Coord = require("./Coord");
 class GameObject {
-    constructor(name, html) {
+    constructor(name, html, xSize, ySize) {
         "use strict";
         this._coord = new Coord();
+        this._size = new Coord(xSize, ySize);
         this._name = name;
         this._type = "GameObject";
         this._html = html;
@@ -14,16 +15,23 @@ class GameObject {
         "use strict";
         return this._type;
     }
-    get moveTo(){
+
+    get size() {
+        "use strict";
+        return this._size;
+    }
+
+    get moveTo() {
         "use strict";
         return this._moveTo;
     }
+
     set moveTo(coords) {
         "use strict";
         if (coords.type !== "Coord") {
             throw new Error("Must be a Coord");
         }
-
+        //coords.divide(new Coord(100,100));
         this._moveTo = coords;
     }
 
