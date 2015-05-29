@@ -5,7 +5,9 @@ class GameObject {
         "use strict";
         this._coord = new Coord();
         this._size = new Coord(xSize, ySize);
+        //Konkreter Instanz-Name
         this._name = name;
+        //Basis-Klasse wird als Daten-Typ für Validierung verwendet
         this._type = "GameObject";
         this._html = html;
 

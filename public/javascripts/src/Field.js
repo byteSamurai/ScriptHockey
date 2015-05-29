@@ -186,7 +186,8 @@ class Field {
         window.setInterval(()=> {
             this._gameObjects.forEach((e)=> {
                 e.calcPosition();
-                this.solveBorderCollisions();
+                this.solvePuckBorderCollisions();
+                this.solveBatterCollisions();
             });
             $(window).trigger("game:tick");
 
@@ -210,46 +211,48 @@ class Field {
     /**
      * Löst kollisionen auf
      */
-    solveBorderCollisions() {
+    solvePuckBorderCollisions() {
         var Coord = require("./Coord");
-        this._gameObjects.forEach((e)=> {
-            if (e.name !== "Puck") {
-                return
-            }
-            //Überlauf rechts
-            let ePos = e.coord.unit;
-            let eSize = e.size.unit;
+        var puck = this._gameObjects.get("Puck");
 
-            //Right border
-            if (ePos.x + eSize.x > HORZ_UNITS) {
-                //Setzte Puck an die Wand
-                e.coord = new Coord(HORZ_UNITS - e.size.unit.x, e.coord.unit.y);
-                e.setPosition();
+        if (puck.name !== "Puck") { //korrekte Instanz
+            return
+        }
+        //Überlauf rechts
+        let ePos = puck.coord.unit;
+        let eSize = puck.size.unit;
 
-                //quirky
-                e.moveTo = Field.collisionDirection(e.moveTo, 0.5 * Math.PI);
-            } else
-            // Left border?
-            if (ePos.x < 0) {
-                e.coord = new Coord(0, e.coord.unit.y);
-                e.setPosition();
-                e.moveTo = Field.collisionDirection(e.moveTo, 1.5 * Math.PI);
-            }
+        //Right border
+        if (ePos.x + eSize.x > HORZ_UNITS) {
+            puck.coord = new Coord(HORZ_UNITS - puck.size.unit.x, puck.coord.unit.y);
+            puck.setPosition();
+            puck.moveTo = Field.collisionDirection(puck.moveTo, 0.5 * Math.PI);
+        } else
+        // Left border?
+        if (ePos.x < 0) {
+            puck.coord = new Coord(0, puck.coord.unit.y);
+            puck.setPosition();
+            puck.moveTo = Field.collisionDirection(puck.moveTo, 1.5 * Math.PI);
+        }
 
-            //Bottom border
-            if (ePos.y + eSize.y > VERT_UNITS) {
-                e.coord = new Coord(e.coord.unit.x, VERT_UNITS - e.size.unit.y);
-                e.setPosition();
-                e.moveTo = Field.collisionDirection(e.moveTo, Math.PI);
-            } else
-            //Top border
-            if (ePos.y < 0) {
-                e.coord = new Coord(e.coord.unit.x, 0);
-                e.setPosition();
-                e.moveTo = Field.collisionDirection(e.moveTo, Math.PI);
-            }
+        //Bottom border
+        if (ePos.y + eSize.y > VERT_UNITS) {
+            puck.coord = new Coord(puck.coord.unit.x, VERT_UNITS - puck.size.unit.y);
+            puck.setPosition();
+            puck.moveTo = Field.collisionDirection(puck.moveTo, Math.PI);
+        } else
+        //Top border
+        if (ePos.y < 0) {
+            puck.coord = new Coord(puck.coord.unit.x, 0);
+            puck.setPosition();
+            puck.moveTo = Field.collisionDirection(puck.moveTo, Math.PI);
+        }
 
-        });
+    }
+
+    solveBatterCollisions() {
+        "use strict";
+
     }
 
     /**
