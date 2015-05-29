@@ -72,7 +72,7 @@ class Batter extends GameObject {
         if (this._facing == 'top') {
             if (mouseY >= (field.height / 2 - this.pixeledRadius)) { //Unterkante-Feldmitte
                 yCoord = Field.pixel2units(field.height / 2 - this.pixeledRadius) - BATTER_RADIUS_UNITS;
-            } else if (mouseY < BATTER_RADIUS_UNITS / 2) {
+            } else if (mouseY < this.pixeledRadius) {
                 yCoord = 0;
             }
         }

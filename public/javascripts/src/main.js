@@ -40,7 +40,7 @@ $(function () {
     field.deployGameObject(player2);
     field.deployGameObject(puck);
     field.build();
-    //field.play();
+    field.play();
 
     $(document).on("mousemove", $.throttle(0, function (event) {
         player1.refreshPosition(event);
