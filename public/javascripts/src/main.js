@@ -6,7 +6,7 @@ var Field = require("./Field");
 var Puck = require("./Puck");
 var Batter = require("./Batter");
 var Coord = require("./Coord");
-
+var Goal = require("./Goal");
 
 $(function () {
 
@@ -21,16 +21,26 @@ $(function () {
     puck.moveTo = 45; // nach links bitte
 
 
-    var player1 = new Batter('player1', 'top');
-    var player2 = new Batter('player2', 'bottom');
+    let player1 = new Batter('player1', 'top');
+    let player2 = new Batter('player2', 'bottom');
+    let goal1 = new Goal('goal1', 'top');
+    let goal2 = new Goal('goal2', 'bottom');
+
     //Startcoords
     player1.coord = new Coord(Field.unitWidth / 2, Field.unitHeight / 4);
     player2.coord = new Coord(Field.unitWidth / 2, 3 * (Field.unitHeight / 4));
+    goal1.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (goal1.size.unit.y / 2));
+    goal2.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goal2.size.unit.y / 2));
+    console.log(goal2.size.unit.y);
+
+    // Deploy game objects and start
+    field.deployGameObject(goal1);
+    field.deployGameObject(goal2);
     field.deployGameObject(player1);
     field.deployGameObject(player2);
     field.deployGameObject(puck);
     field.build();
-    field.play();
+    //field.play();
 
     $(document).on("mousemove", $.throttle(0, function (event) {
         player1.refreshPosition(event);

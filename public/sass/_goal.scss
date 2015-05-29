@@ -1,0 +1,8 @@
+span.goals{
+  display: block;
+  @include border-radius(1000px); // yes, 1000px is correct!
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 10000;
+  //@include transition(all 1000ms linear) //
+}
