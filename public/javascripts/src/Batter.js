@@ -77,9 +77,6 @@ class Batter extends GameObject {
             }
         }
 
-
-        //console.log(mouseX + ', ' + field.html.css('left'));
-
         this.coord.unit = {x: xCoord, y: yCoord};
         this.setPosition()
 

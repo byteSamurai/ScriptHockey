@@ -31,7 +31,6 @@ $(function () {
     player2.coord = new Coord(Field.unitWidth / 2, 3 * (Field.unitHeight / 4));
     goal1.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (goal1.size.unit.y / 2));
     goal2.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goal2.size.unit.y / 2));
-    console.log(goal2.size.unit.y);
 
     // Deploy game objects and start
     field.deployGameObject(goal1);
