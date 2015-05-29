@@ -21,10 +21,10 @@ $(function () {
     puck.moveTo = 45; // nach links bitte
 
 
-    let player1 = new Batter('player1', 'top');
-    let player2 = new Batter('player2', 'bottom');
-    let goal1 = new Goal('goal1', 'top');
-    let goal2 = new Goal('goal2', 'bottom');
+    let player1 = new Batter(Batter.position.TOP);
+    let player2 = new Batter(Batter.position.BOTTOM);
+    let goal1 = new Goal(Goal.position.TOP);
+    let goal2 = new Goal(Goal.position.BOTTOM);
 
     //Startcoords
     player1.coord = new Coord(Field.unitWidth / 2, Field.unitHeight / 4);

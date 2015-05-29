@@ -8,6 +8,8 @@ const RATIO = 0.666666;
 const REFRESH_RATE_MS = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
+const VEC_BOTTOM_TOP = Math.PI; //rad
+const VEC_LEFT_RIGHT = Math.PI * 0.5; // rad
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
@@ -27,7 +29,7 @@ class Field {
         }
 
         this._gameObjects = new Map();
-        this._name = "Field";
+        this._ID = "field";
         this._height = 0;
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
@@ -51,17 +53,6 @@ class Field {
         }
         return this[singleton];
     }
-
-    /**
-     * Berechnet die Breite des Feldes
-     * @private
-     */
-    _calcRatioSize() {
-        "use strict";
-        this._height = $("body").height();
-        this._width = this._height * RATIO;
-    }
-
 
     /**
      * Wandel Darstellungseinheiten in Pixel um
@@ -115,6 +106,24 @@ class Field {
     }
 
     /**
+     * Höhe in Units
+     * @returns {number}
+     */
+    static get unitHeight() {
+        "use strict";
+        return VERT_UNITS;
+    }
+
+    /**
+     * Weite in Units
+     * @returns {number}
+     */
+    static get unitWidth() {
+        "use strict";
+        return HORZ_UNITS;
+    }
+
+    /**
      * Weite in Pixel
      * @returns {number}
      */
@@ -133,26 +142,22 @@ class Field {
     }
 
     /**
-     * Höhe in Units
-     * @returns {number}
+     * Liefert repräsentatives DOM-Element als Jquery
+     * @returns {*|jQuery|HTMLElement}
      */
-    static get unitHeight() {
-        "use strict";
-        return VERT_UNITS;
-    }
-
-    /**
-     * Weite in Units
-     * @returns {number}
-     */
-    static get unitWidth() {
-        "use strict";
-        return HORZ_UNITS;
-    }
-
     get html() {
         "use strict";
         return this._fieldHTML;
+    }
+
+    /**
+     * Berechnet die Breite des Feldes
+     * @private
+     */
+    _calcRatioSize() {
+        "use strict";
+        this._height = $("body").height();
+        this._width = this._height * RATIO;
     }
 
     /**
@@ -163,7 +168,7 @@ class Field {
         this._calcRatioSize();
         //Entferne altes Spielfeld
         if (this._fieldHTML !== null) {
-            $("#" + this._name.toLowerCase()).remove();
+            $("#" + this._ID).remove();
         }
 
         $("body").append(this._fieldHTML);
@@ -174,7 +179,7 @@ class Field {
         });
 
         this._gameObjects.forEach((e)=> {
-            $("#field").append(e.html);
+            $("#" + this._ID).append(e.html);
         });
     }
 
@@ -192,7 +197,6 @@ class Field {
             $(window).trigger("game:tick");
 
         }, REFRESH_RATE_MS);
-
     }
 
     /**
@@ -201,21 +205,30 @@ class Field {
      */
     deployGameObject(gameObject) {
         "use strict";
-        if (gameObject.type !== "GameObject") {
+        let GameObject = require("./GameObject");
+
+        if (!gameObject instanceof GameObject) {
             throw new Error("Must be a gameobject");
         }
+
         gameObject.setPosition();
-        this._gameObjects.set(gameObject.name, gameObject);
+        this._gameObjects.set(gameObject.ID, gameObject);
     }
 
     /**
-     * Löst kollisionen auf
+     * Löst Wandkollisionen auf
      */
     solvePuckBorderCollisions() {
         var Coord = require("./Coord");
-        var puck = this._gameObjects.get("Puck");
+        var Puck = require("./Puck");
 
-        if (puck.name !== "Puck") { //korrekte Instanz
+        if (!this._gameObjects.has("puck")) {
+            throw new Error("No Puck at Game!")
+        }
+
+        var puck = this._gameObjects.get("puck");
+
+        if (!puck instanceof Puck) { //korrekte Instanz
             return
         }
         //Überlauf rechts
@@ -226,33 +239,35 @@ class Field {
         if (ePos.x + eSize.x > HORZ_UNITS) {
             puck.coord = new Coord(HORZ_UNITS - puck.size.unit.x, puck.coord.unit.y);
             puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, 0.5 * Math.PI);
+            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
         } else
         // Left border?
         if (ePos.x < 0) {
             puck.coord = new Coord(0, puck.coord.unit.y);
             puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, 1.5 * Math.PI);
+            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
         }
 
         //Bottom border
         if (ePos.y + eSize.y > VERT_UNITS) {
             puck.coord = new Coord(puck.coord.unit.x, VERT_UNITS - puck.size.unit.y);
             puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, Math.PI);
+            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_BOTTOM_TOP);
         } else
         //Top border
         if (ePos.y < 0) {
             puck.coord = new Coord(puck.coord.unit.x, 0);
             puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, Math.PI);
+            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_BOTTOM_TOP);
         }
-
     }
 
+    /**
+     * Löst Schläger-Kollisionen auf
+     */
     solveBatterCollisions() {
         "use strict";
-
+        //console.log(this._gameObjects.values());
     }
 
     /**
@@ -268,7 +283,6 @@ class Field {
         let dAngle = 2 * colAngle - 2 * orgAngle;
         return (360 + orgAngle + dAngle) % 360;
     }
-
-
 }
+
 module.exports = Field;

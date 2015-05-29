@@ -8,9 +8,11 @@ var Field = require("./Field");
 const BATTER_RADIUS_UNITS = 32;
 
 class Batter extends GameObject {
-    constructor(name, facing) {
+    constructor(facing) {
         "use strict";
-        super(name, $('<b id="batter_' + name + '" class="batters"/>'), BATTER_RADIUS_UNITS * 2, BATTER_RADIUS_UNITS * 2);
+
+        super("batter-" + facing, $('<b class="batters"/>'), BATTER_RADIUS_UNITS * 2, BATTER_RADIUS_UNITS * 2);
+
         this._facing = facing;
         this.pixeledRadius = Field.units2pixel(BATTER_RADIUS_UNITS);
 
@@ -25,11 +27,13 @@ class Batter extends GameObject {
         }).trigger("resize");
     }
 
-    get baseType() {
+    static get position() {
         "use strict";
-        super.type;
+        return {
+            TOP: "top",
+            BOTTOM: "bottom"
+        }
     }
-
     /**
      * Liefert die Puck-größe
      * @returns {Coord}

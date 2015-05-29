@@ -1,11 +1,11 @@
-b#batter_player1{
+b#batter-top {
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #aa333f;
   position: absolute;
 }
 
-b#batter_player2{
+b#batter-bottom {
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #34aa32;

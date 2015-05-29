@@ -8,9 +8,9 @@ var Puck = require("./Puck");
 
 
 class Goal extends GameObject {
-    constructor(name, facing) {
+    constructor(facing) {
         "use strict";
-        super(name, $('<span id="goal_' + name + '" class="goals"/>'), Field.unitWidth / 4, Field.unitHeight / 20);
+        super("goal-" + facing, $('<span class="goals"/>'), Field.unitWidth / 4, Field.unitHeight / 20);
         this._facing = facing;
 
         $(window).on("resize", ()=> {
@@ -23,12 +23,20 @@ class Goal extends GameObject {
         }).trigger("resize");
     }
 
-    get Width() {
+    static get position() {
+        "use strict";
+        return {
+            TOP: "top",
+            BOTTOM: "bottom"
+        }
+    }
+
+    get width() {
         "use strict";
 
     }
 
-    get Height() {
+    get height() {
         "use strict";
 
     }
