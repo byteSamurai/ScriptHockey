@@ -1,4 +1,5 @@
 b#batter_player1{
+  cursor: none;
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #aa333f;
@@ -6,6 +7,7 @@ b#batter_player1{
 }
 
 b#batter_player2{
+  cursor: none;
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #34aa32;

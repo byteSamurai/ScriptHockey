@@ -16,3 +16,21 @@ body{
    padding: 0;
    overflow:hidden; //it's a ab: no scroll at body
 }
+
+.modal{
+  width: auto;
+  height: auto;
+}
+.modal-footer{
+  float: left !important;
+}
+
+.row_start{
+  margin-left: 20% !important;
+}
+
+.btn_start{
+  width: 400px;
+  position: relative;
+  margin-bottom: 5px;
+}
