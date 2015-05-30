@@ -230,8 +230,8 @@ class Field {
      * Löst Wandkollisionen auf
      */
     solvePuckBorderCollisions() {
-        var Coord = require("./Coord");
-        var Puck = require("./Puck");
+        let Coord = require("./Coord");
+        let Puck = require("./Puck");
 
         if (!this._gameObjects.has("puck")) {
             throw new Error("No Puck at Game!")
@@ -242,34 +242,48 @@ class Field {
         if (!puck instanceof Puck) { //korrekte Instanz
             return
         }
-        //Überlauf rechts
+
         let ePos = puck.coord.unit;
         let eSize = puck.size.unit;
+        var wallDirection;
 
         //Right border
         if (ePos.x + eSize.x > HORZ_UNITS) {
-            puck.coord = new Coord(HORZ_UNITS - puck.size.unit.x, puck.coord.unit.y);
-            puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
+            puck.coord.unit = {
+                x: HORZ_UNITS - puck.size.unit.x,
+                y: puck.coord.unit.y
+            };
+            wallDirection = VEC_LEFT_RIGHT;
         } else
         // Left border?
         if (ePos.x < 0) {
-            puck.coord = new Coord(0, puck.coord.unit.y);
-            puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
+            puck.coord.unit = {
+                x: 0,
+                y: puck.coord.unit.y
+            };
+            wallDirection = VEC_LEFT_RIGHT;
         }
 
-        //Bottom border
+        //Bottom border?
         if (ePos.y + eSize.y > VERT_UNITS) {
-            puck.coord = new Coord(puck.coord.unit.x, VERT_UNITS - puck.size.unit.y);
-            puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_BOTTOM_TOP);
+            puck.coord.unit = {
+                x: puck.coord.unit.x,
+                y: VERT_UNITS - puck.size.unit.y
+            };
+            wallDirection = VEC_BOTTOM_TOP;
         } else
-        //Top border
+        //Top border?
         if (ePos.y < 0) {
-            puck.coord = new Coord(puck.coord.unit.x, 0);
+            puck.coord.unit = {
+                x: puck.coord.unit.x,
+                y: 0
+            };
+            wallDirection = VEC_BOTTOM_TOP;
+        }
+
+        if (wallDirection != undefined) {
+            puck.moveTo = Field.collisionDirection(puck.moveTo, wallDirection);
             puck.setPosition();
-            puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_BOTTOM_TOP);
         }
     }
 
@@ -280,6 +294,7 @@ class Field {
         "use strict";
         var Puck = require("./Puck");
         var Batter = require("./Batter");
+        var Coord = require("./Coord");
 
         let puck = this._gameObjects.get("puck");
 
@@ -298,9 +313,14 @@ class Field {
             let yDist = e.coord.unit.y - puck.coord.unit.y;
             let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
             //console.log(distance, "collision", distance < (Puck.radius + Batter.radius));
-            if (distance < (Puck.radius + Batter.radius)) {
-                puck.coord = new Coord(HORZ_UNITS - puck.size.unit.x, puck.coord.unit.y);
-                puck.setPosition();
+            if (distance < Puck.radius + Batter.radius) {
+
+                //puck.coord.unit = {
+                //    x: HORZ_UNITS - puck.size.unit.x,
+                //    y: puck.coord.unit.y
+                //};
+                //
+                //puck.setPosition();
                 puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
 
             }
