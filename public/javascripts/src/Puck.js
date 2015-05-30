@@ -46,6 +46,15 @@ class Puck extends GameObject {
     }
 
     /**
+     * Liefert Mittelpunkt-Koordinaten
+     * @returns {Coord}
+     */
+    get centerCoord() {
+        "use strict";
+        return super.coord.sub(new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS))
+    }
+
+    /**
      * Setzt Puck auf Position
      */
     setPosition() {

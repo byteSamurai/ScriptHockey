@@ -57,6 +57,15 @@ class Batter extends GameObject {
         return super.size;
     }
 
+    /**
+     * Liefert Mittelpunkt-Koordinaten
+     * @returns {Coord}
+     */
+    get centerCoord() {
+        "use strict";
+        return super.coord.sub(new Coord(BATTER_RADIUS_UNITS, BATTER_RADIUS_UNITS))
+    }
+
     refreshPosition(event) {
         "use strict";
         let fieldLeftOffset = Field.instance.html.offset().left;
