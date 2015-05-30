@@ -30,3 +30,4 @@ build/Release
 node_modules
 #ignore thumbnails created by windows
 Thumbs.db
+public/javascripts/dist
