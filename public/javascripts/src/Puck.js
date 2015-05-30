@@ -37,6 +37,15 @@ class Puck extends GameObject {
     }
 
     /**
+     * Liefert Puck-Radius in units
+     * @returns {number}
+     */
+    static get radius() {
+        "use strict";
+        return PUCK_RADIUS_UNITS;
+    }
+
+    /**
      * Setzt Puck auf Position
      */
     setPosition() {
@@ -45,7 +54,7 @@ class Puck extends GameObject {
     }
 
     /**
-     * Berechnet Position, ohne sie zu setzen
+     * Berechnet Position uns setzt Object anschließend an Position
      */
     calcPosition() {
         "use strict";

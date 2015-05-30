@@ -25,6 +25,11 @@ class Batter extends GameObject {
                 height: super.size.pixel.y
             });
         }).trigger("resize");
+
+        //on Mousemove, Position neu berechnen
+        $(document).on("mousemove", $.throttle(Field.refreshRate / 4, (e)=> {
+            this.refreshPosition(e);
+        }));
     }
 
     static get position() {
@@ -33,6 +38,15 @@ class Batter extends GameObject {
             TOP: "top",
             BOTTOM: "bottom"
         }
+    }
+
+    /**
+     * Liefert Radius in Units
+     * @returns {number}
+     */
+    static get radius() {
+        "use strict";
+        return BATTER_RADIUS_UNITS
     }
     /**
      * Liefert die Puck-größe
@@ -82,8 +96,15 @@ class Batter extends GameObject {
         }
 
         this.coord.unit = {x: xCoord, y: yCoord};
-        this.setPosition()
+    }
 
+    /**
+     * Berechnet Position
+     */
+    calcPosition() {
+        "use strict";
+        super.calcPosition();
+        this.setPosition();
     }
 }
 

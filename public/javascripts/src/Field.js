@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 10;
+const REFRESH_RATE_MS = 500;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad
@@ -121,6 +121,14 @@ class Field {
     static get unitWidth() {
         "use strict";
         return HORZ_UNITS;
+    }
+
+    /**
+     * Aktualisierungsrate des Spielfelds
+     */
+    static get refreshRate() {
+        "use strict";
+        return REFRESH_RATE_MS;
     }
 
     /**
@@ -267,7 +275,36 @@ class Field {
      */
     solveBatterCollisions() {
         "use strict";
-        //console.log(this._gameObjects.values());
+        var Puck = require("./Puck");
+        var Batter = require("./Batter");
+
+        let puck = this._gameObjects.get("puck");
+
+        let batters = [];
+        let batterBottom = this._gameObjects.get("batter-bottom");
+        let batterTop = this._gameObjects.get("batter-top");
+
+        if (batterBottom !== undefined) {
+            batters.push(batterBottom)
+        }
+        if (batterTop !== undefined) {
+            batters.push(batterTop)
+        }
+
+        batters.forEach((e)=> {
+            let xDist = e.coord.unit.x - puck.coord.unit.x;
+            let yDist = e.coord.unit.y - puck.coord.unit.y;
+            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+            //console.log(puck.coord.unit);
+            //console.log(e.coord.unit);
+            //console.log(distance, "collision", distance < (Puck.radius + Batter.radius));
+            if (distance < (Puck.radius + Batter.radius)) {
+                puck.speed = 0;
+            } else {
+
+            }
+        });
+
     }
 
     /**

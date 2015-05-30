@@ -16,7 +16,7 @@ class GameObject {
         //Basis-Klasse wird als Daten-Typ für Validierung verwendet
         this._html = html.attr("id", id);
         this._moveTo = 0;
-        this._speed = 5;
+        this._speed = 0;
     }
 
     /**

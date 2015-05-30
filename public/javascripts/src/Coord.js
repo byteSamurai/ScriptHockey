@@ -136,6 +136,15 @@ class Coord {
     }
 
     /**
+     * Clone Coordinaten
+     * @returns {Coord}
+     */
+    clone() {
+        "use strict";
+        return new Coord(this._unit.x, this._unit.y)
+    }
+
+    /**
      * Aktualisiert pixel von units ausgehend
      */
     refreshFromUnits() {
