@@ -17,7 +17,7 @@ class Batter extends GameObject {
         this.pixeledRadius = Field.units2pixel(BATTER_RADIUS_UNITS);
 
 
-        $(window).on("resize", ()=> {
+        $(window).on("resize", (e)=> {
             super.size.refreshFromUnits();
 
             super.html.css({
@@ -25,12 +25,12 @@ class Batter extends GameObject {
                 height: super.size.pixel.y
             });
 
-            this.calcPosition();
+            this.calcPosition(e);
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
         $(document).on("mousemove", $.throttle(Field.refreshRate / 4, (e)=> {
-            this.refreshPosition(e);
+            this.calcPosition(e);
         }));
     }
 
@@ -50,6 +50,7 @@ class Batter extends GameObject {
         "use strict";
         return BATTER_RADIUS_UNITS
     }
+
     /**
      * Liefert die Puck-größe
      * @returns {Coord}
@@ -68,7 +69,12 @@ class Batter extends GameObject {
         return super.coord.sub(new Coord(BATTER_RADIUS_UNITS, BATTER_RADIUS_UNITS))
     }
 
-    refreshPosition(event) {
+    /**
+     * Liefert nächste Position
+     * @param event
+     * @returns {{x: number, y: number}}
+     */
+    getNextPosition(event) {
         "use strict";
         let fieldLeftOffset = Field.instance.html.offset().left;
         let mouseX = event.pageX;
@@ -106,15 +112,23 @@ class Batter extends GameObject {
             }
         }
 
-        this.coord.unit = {x: xCoord, y: yCoord};
+        return {x: xCoord, y: yCoord};
     }
 
     /**
      * Berechnet Position
      */
-    calcPosition() {
+    calcPosition(e) {
         "use strict";
-        super.calcPosition();
+        if ((typeof e != "undefined") && (e.type == "mousemove")) { //can only retrieve mouse pos if mouse was moved
+            let oldPos = this.coord.unit;
+            this.coord.unit = this.getNextPosition(e);
+            let xDist = this.coord.unit.x - oldPos.x;
+            let yDist = this.coord.unit.y - oldPos.y;
+            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+            this.speed = distance;
+            //TODO: moveTo
+        }
         this.setPosition();
     }
 }
