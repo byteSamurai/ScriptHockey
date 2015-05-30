@@ -20,6 +20,8 @@ class Goal extends GameObject {
                 width: super.size.pixel.x,
                 height: super.size.pixel.y
             });
+
+            this.calcPosition();
         }).trigger("resize");
     }
 
@@ -39,6 +41,15 @@ class Goal extends GameObject {
     get height() {
         "use strict";
 
+    }
+
+    /**
+     * Berechnet Position
+     */
+    calcPosition() {
+        "use strict";
+        super.calcPosition();
+        this.setPosition();
     }
 
 }

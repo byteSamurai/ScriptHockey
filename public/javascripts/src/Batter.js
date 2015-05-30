@@ -24,6 +24,8 @@ class Batter extends GameObject {
                 width: super.size.pixel.x,
                 height: super.size.pixel.y
             });
+
+            this.calcPosition();
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
