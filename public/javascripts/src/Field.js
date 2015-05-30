@@ -197,11 +197,14 @@ class Field {
     play() {
         "use strict";
         window.setInterval(()=> {
+            //Berechne Position aller Objekte
             this._gameObjects.forEach((e)=> {
                 e.calcPosition();
-                this.solvePuckBorderCollisions();
-                this.solveBatterCollisions();
             });
+
+            this.solvePuckBorderCollisions();
+            this.solveBatterCollisions();
+
             $(window).trigger("game:tick");
 
         }, REFRESH_RATE_MS);
@@ -290,17 +293,15 @@ class Field {
         if (batterTop !== undefined) {
             batters.push(batterTop)
         }
-
         batters.forEach((e)=> {
             let xDist = e.coord.unit.x - puck.coord.unit.x;
             let yDist = e.coord.unit.y - puck.coord.unit.y;
             let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-            //console.log(puck.coord.unit);
-            //console.log(e.coord.unit);
             //console.log(distance, "collision", distance < (Puck.radius + Batter.radius));
             if (distance < (Puck.radius + Batter.radius)) {
-                puck.speed = 0;
-            } else {
+                puck.coord = new Coord(HORZ_UNITS - puck.size.unit.x, puck.coord.unit.y);
+                puck.setPosition();
+                puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
 
             }
         });
