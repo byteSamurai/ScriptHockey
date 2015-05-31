@@ -29,8 +29,8 @@ class GameObject {
     }
 
     /**
-     * Winkel der BEwegungsrichtung in rad!
-     * @returns {number}
+     * Winkel der Bewegungsrichtung in rad!!!!!
+     * @returns {number} Winkel in rad!
      */
     get moveTo() {
         "use strict";
@@ -38,18 +38,15 @@ class GameObject {
     }
 
     /**
-     * Winkel, der Bewegungsrichtung
+     * Winkel, der Bewegungsrichtung in rad
      * 0° == recht, 90° == unten
      * @param {number} angle
      */
     set moveTo(angle) {
         "use strict";
-        if (typeof angle !== "number" || angle < 0 || angle > 360) {
-            throw new Error("Must be an Integer between 0° and 360°");
-        }
-
-        this._moveTo = (Math.PI / 180) * angle;
+        this._moveTo = angle;
     }
+
 
     /**
      * Die repäsentative ID eines jeden Objects
@@ -92,14 +89,8 @@ class GameObject {
      */
     get speedAsCoord() {
         "use strict";
-        //Polarkoordinaten-Konversion
-        let x = Math.cos(this._moveTo) * this._speed;
-        let y = Math.sin(this._moveTo) * this._speed;
-        // runden
-        x = Math.round(x * 100) / 100;
-        y = Math.round(y * 100) / 100;
-
-        return new Coord(x, y)
+        var Coord = require("./Coord");
+        return Coord.polarToCartesian(this._speed, this._moveTo);
     }
 
     /**

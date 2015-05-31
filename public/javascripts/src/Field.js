@@ -322,7 +322,7 @@ class Field {
                 //};
                 //
                 //puck.setPosition();
-                puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
+                //puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
 
             }
         });
@@ -333,14 +333,12 @@ class Field {
      * Berechnet Austrittswinkel
      * @param originAngle
      * @param collidingAngle
-     * @returns {number}
+     * @returns {number} rad des neuen Winkels
      */
     static collisionDirection(originAngle, collidingAngle) {
         "use strict";
-        let colAngle = collidingAngle * (180 / Math.PI);
-        let orgAngle = originAngle * (180 / Math.PI);
-        let dAngle = 2 * colAngle - 2 * orgAngle;
-        return (360 + orgAngle + dAngle) % 360;
+        let fullCircleRad = 2 * Math.PI;
+        return (fullCircleRad + originAngle + 2 * collidingAngle - 2 * originAngle) % fullCircleRad;
     }
 }
 

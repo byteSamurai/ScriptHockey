@@ -159,5 +159,52 @@ class Coord {
         "use strict";
         this._unit = Field.pixel2units(this._pixel);
     }
+
+    /**
+     *
+     * @param Coord
+     */
+    static cartesianToPolar(Coord) {
+        "use strict";
+        return Math.atan2(Coord.unit.x, Coord.unit.y)
+
+    }
+
+    /**
+     * Rechnet Polarkoordinate in kartesiche um
+     * @param {number} speed
+     * @param {number} moveTo in rad
+     * @returns {Coord}
+     */
+    static polarToCartesian(speed, moveTo) {
+        "use strict";
+
+        //Polarkoordinaten-Konversion
+        let x = Math.cos(moveTo) * speed;
+        let y = Math.sin(moveTo) * speed;
+        // runden
+        x = Math.round(x * 100) / 100;
+        y = Math.round(y * 100) / 100;
+
+        return new Coord(x, y)
+    }
+
+    /**
+     * Grad in rad
+     */
+    static deg2rad(deg) {
+        "use strict";
+        return deg * (Math.PI / 180)
+
+
+    }
+
+    /**
+     * rad in Grad
+     */
+    static rad2deg(rad) {
+        "use strict";
+        return rad * (180 / Math.PI)
+    }
 }
 module.exports = Coord;
