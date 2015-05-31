@@ -16,9 +16,9 @@ $(function () {
     let puck = new Puck();
 
     //Startcoords
-    puck.coord = new Coord(500, 800);
+    puck.coord = new Coord(Field.unitWidth / 2, Field.unitHeight / 2);
     //StartSpeed
-    puck.speed = 5;
+    puck.speed = 0;
     puck.moveTo = Coord.deg2rad(45); // nach links bitte
 
 

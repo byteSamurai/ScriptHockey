@@ -116,11 +116,12 @@ class GameObject {
 
     /**
      * Bewegt Gameobject an Position
+     * @link http://jsperf.com/translate3d-vs-xy/28
      */
     setPosition() {
         "use strict";
         let domobject = this._html[0];
-        domobject.style.transform = "translate(" + this._coord.pixel.x + "px," + this._coord.pixel.y + "px)";
+        domobject.style.transform = "translate3d(" + this._coord.pixel.x + "px," + this._coord.pixel.y + "px,0)";
     }
 
     /**

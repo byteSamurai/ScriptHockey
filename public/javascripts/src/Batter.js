@@ -29,7 +29,7 @@ class Batter extends GameObject {
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
-        $(document).on("mousemove", $.throttle(Field.refreshRate / 4, (e)=> {
+        $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
             this.calcPosition(e);
         }));
     }

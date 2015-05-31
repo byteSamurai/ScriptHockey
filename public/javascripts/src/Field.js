@@ -34,6 +34,7 @@ class Field {
         this._height = 0;
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
+        this._playInstance = null;
 
         this._calcRatioSize();
 
@@ -197,7 +198,7 @@ class Field {
      */
     play() {
         "use strict";
-        window.setInterval(()=> {
+        this._playInstance = window.setInterval(()=> {
             //Berechne Position aller Objekte
             this._gameObjects.forEach((e)=> {
                 e.calcPosition();
@@ -209,6 +210,11 @@ class Field {
             $(window).trigger("game:tick");
 
         }, REFRESH_RATE_MS);
+    }
+
+    stop() {
+        "use strict";
+        window.clearInterval(this._playInstance);
     }
 
     /**
@@ -348,6 +354,7 @@ class Field {
      * Erkenne Tor
      */
     detectGoalCollision() {
+        let Puck = require("./Puck");
         let puck = this._gameObjects.get("puck");
 
         [
@@ -356,7 +363,24 @@ class Field {
         ].forEach(
             (e)=> {
                 "use strict";
-                console.log(e.width);
+                let start = e.coord.unit.x;
+                let end = start + e.width;
+                //Oberes Tor
+                if (puck.coord.unit.y <= 0 && puck.coord.unit.x > start && puck.coord.unit.x < end) {
+                    this.stop();
+                    $(window).trigger("game:tick", {
+                        player: "top",
+                        score: puck.score
+                    })
+                }
+
+                if ((puck.coord.unit.y + 2 * Puck.radius) >= VERT_UNITS - Puck.radius - 1 && puck.coord.unit.x > start && puck.coord.unit.x < end) {
+                    this.stop();
+                    $(window).trigger("game:tick", {
+                        player: "bottom",
+                        score: puck.score
+                    })
+                }
             }
         )
     }
