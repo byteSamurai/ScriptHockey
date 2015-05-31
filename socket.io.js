@@ -7,8 +7,7 @@ var socketio = require('socket.io');
 
 var socketServer = function (app, server) {
     var io = socketio.listen(server);
-    require("./server_lib/mouseSync")(io);
-
+    require("./routes/scriptHockeyServer")(io);
 };
 
 module.exports.socketServer=socketServer;

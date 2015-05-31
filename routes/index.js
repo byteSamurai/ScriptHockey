@@ -6,7 +6,6 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'ScriptHockey'});
 });
 
-
 module.exports = router;
 
 

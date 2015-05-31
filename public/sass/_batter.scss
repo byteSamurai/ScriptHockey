@@ -2,7 +2,7 @@
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
   position: absolute;
-  z-index: 1000;
+  z-index: 900;
 }
 
 b#batter-top {
