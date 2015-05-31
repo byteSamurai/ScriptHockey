@@ -6,11 +6,14 @@ var Coord = require("./Coord");
 var Field = require("./Field");
 var Puck = require("./Puck");
 
+const GOAL_HEIGHT = Field.unitHeight / 20;
+const GOAL_WIDTH = Field.unitWidth / 4;
+
 
 class Goal extends GameObject {
     constructor(facing) {
         "use strict";
-        super("goal-" + facing, $('<span class="goals"/>'), Field.unitWidth / 4, Field.unitHeight / 20);
+        super("goal-" + facing, $('<span class="goals"/>'), GOAL_WIDTH, GOAL_HEIGHT);
         this._facing = facing;
 
         $(window).on("resize", ()=> {
@@ -35,12 +38,12 @@ class Goal extends GameObject {
 
     get width() {
         "use strict";
-
+        return super.size.unit.x
     }
 
     get height() {
         "use strict";
-
+        return super.size.unit.y;
     }
 
     /**

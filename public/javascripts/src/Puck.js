@@ -9,12 +9,15 @@ var Coord = require("./Coord");
 const VELOCITY = -0.5; //ggf. später austauschen gegen Funktion f(t)
 const PUCK_RADIUS_UNITS = 16;
 
+const SCORE_STEP = 25;
+
 class Puck extends GameObject {
 
     constructor() {
         "use strict";
         super("puck", $("<b />"), PUCK_RADIUS_UNITS * 2, PUCK_RADIUS_UNITS * 2);
 
+        this._score = 50;
         $(window).on("resize", ()=> {
 
             super.size.refreshFromUnits();
@@ -27,6 +30,21 @@ class Puck extends GameObject {
 
     }
 
+    /**
+     * Liefert Punktestand
+     */
+    get score() {
+        "use strict";
+        return this._score;
+    }
+
+    /**
+     * Erhöht Punktestand
+     */
+    addScore() {
+        "use strict";
+        this._score += SCORE_STEP
+    }
     /**
      * Liefert die Puck-größe
      * @returns {Coord}
@@ -52,17 +70,6 @@ class Puck extends GameObject {
     get centerCoord() {
         "use strict";
         return super.coord.clone().add(
-            new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS)
-        )
-    }
-
-    /**
-     * Setzt Koordinaten ausgehend vom Mittelpunkt der Figur
-     * @param {Coord} centerCoord
-     */
-    set centerCoord(centerCoord) {
-        "use strict";
-        this._coord = centerCoord.sub(
             new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS)
         )
     }

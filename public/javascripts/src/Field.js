@@ -5,11 +5,12 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 30;
+const REFRESH_RATE_MS = 10;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad
 const VEC_LEFT_RIGHT = Math.PI * 0.5; // rad
+const SPEED_INCREASE_STEP = 1;
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
@@ -201,7 +202,7 @@ class Field {
             this._gameObjects.forEach((e)=> {
                 e.calcPosition();
             });
-
+            this.detectGoalCollision();
             this.solvePuckBorderCollisions();
             this.solveBatterCollisions();
 
@@ -314,6 +315,7 @@ class Field {
             let yDist = e.centerCoord.unit.y - puck.centerCoord.unit.y;
             let polarCoord = Coord.cartesianToPolar(xDist, yDist);
             let radiusSum = Puck.radius + Batter.radius;
+            //Bounced!
             if (polarCoord.distance < radiusSum) {
                 //Schiebe Puck an Rand von Batter
                 polarCoord.distance -= radiusSum;
@@ -323,6 +325,9 @@ class Field {
                 //Drehe um 180° zum zentrum
                 puck.moveTo = (polarCoord.angle + Math.PI) % (2 * Math.PI);
 
+                puck.speed += SPEED_INCREASE_STEP;
+                puck.addScore();
+                console.info("Puck ist nun " + puck.score + " wert");
             }
         });
     }
@@ -337,6 +342,23 @@ class Field {
         "use strict";
         let fullCircleRad = 2 * Math.PI;
         return (fullCircleRad + originAngle + 2 * collidingAngle - 2 * originAngle) % fullCircleRad;
+    }
+
+    /**
+     * Erkenne Tor
+     */
+    detectGoalCollision() {
+        let puck = this._gameObjects.get("puck");
+
+        [
+            this._gameObjects.get("goal-top"),
+            this._gameObjects.get("goal-bottom")
+        ].forEach(
+            (e)=> {
+                "use strict";
+                console.log(e.width);
+            }
+        )
     }
 }
 

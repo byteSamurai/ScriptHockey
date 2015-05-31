@@ -17,7 +17,8 @@ $(function () {
 
     //Startcoords
     puck.coord = new Coord(500, 800);
-    puck.speed = 35;
+    //StartSpeed
+    puck.speed = 5;
     puck.moveTo = Coord.deg2rad(45); // nach links bitte
 
 
@@ -42,15 +43,16 @@ $(function () {
     field.play();
 
     //Shadow-Animation
-    $(window).on("game:tick", ()=> {
-        $.fn.realshadow.reset();
-        $('.batters').realshadow({
-            pageX: puck.coord.pixel.x + field.html.offset().left,
-            pageY: puck.coord.pixel.y,
-            color: "41,255,242",    // shadow color, rgb 0..255, default: '0,0,0'
-            type: 'drop' // shadow type
-        });
-    });
+    //$(window).on("game:tick", ()=> {
+    //    $.fn.realshadow.reset();
+    //    console.log(puck.coord.pixel.x + field.html.offset().left );
+    //    $('.batters').realshadow({
+    //        pageX: puck.coord.pixel.x + field.html.offset().left + field.html.width()/2,
+    //        pageY: puck.coord.pixel.y,
+    //        color: "41,255,242",    // shadow color, rgb 0..255, default: '0,0,0'
+    //        type: 'drop' // shadow type
+    //    });
+    //});
 });
 
 
