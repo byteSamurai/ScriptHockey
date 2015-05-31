@@ -213,11 +213,17 @@ class Field {
         }, REFRESH_RATE_MS);
     }
 
+    /**
+     * Stoppt Spiel
+     */
     stop() {
         "use strict";
         window.clearInterval(this._playInstance);
     }
 
+    /**
+     * Setzt Spielelemente auf Ausgangszustand zurück
+     */
     reset() {
         "use strict";
         let puck = this._gameObjects.get("puck");
