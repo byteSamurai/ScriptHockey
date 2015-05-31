@@ -17,7 +17,7 @@ $(function () {
 
     //Startcoords
     puck.coord = new Coord(500, 800);
-    puck.speed = 35;
+    puck.speed = 0;
     puck.moveTo = 45; // nach links bitte
 
 

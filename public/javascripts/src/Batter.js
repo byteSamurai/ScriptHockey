@@ -66,7 +66,9 @@ class Batter extends GameObject {
      */
     get centerCoord() {
         "use strict";
-        return super.coord.sub(new Coord(BATTER_RADIUS_UNITS, BATTER_RADIUS_UNITS))
+        return super.coord.clone().add(
+            new Coord(BATTER_RADIUS_UNITS, BATTER_RADIUS_UNITS)
+        )
     }
 
     /**

@@ -51,7 +51,9 @@ class Puck extends GameObject {
      */
     get centerCoord() {
         "use strict";
-        return super.coord.sub(new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS))
+        return super.coord.clone().add(
+            new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS)
+        )
     }
 
     /**

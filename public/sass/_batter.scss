@@ -1,13 +1,14 @@
-b#batter-top {
+.batters {
   display: block;
   @include border-radius(1000px); // yes, 1000px is correct!
-  background-color: #aa333f;
   position: absolute;
+  z-index: 1000;
+}
+
+b#batter-top {
+  background-color: #aa333f;
 }
 
 b#batter-bottom {
-  display: block;
-  @include border-radius(1000px); // yes, 1000px is correct!
   background-color: #34aa32;
-  position: absolute;
 }

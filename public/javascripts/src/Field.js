@@ -308,13 +308,14 @@ class Field {
         if (batterTop !== undefined) {
             batters.push(batterTop)
         }
-        batters.forEach((e)=> {
-            let xDist = e.coord.unit.x - puck.coord.unit.x;
-            let yDist = e.coord.unit.y - puck.coord.unit.y;
-            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-            //console.log(distance, "collision", distance < (Puck.radius + Batter.radius));
-            if (distance < Puck.radius + Batter.radius) {
 
+        batters.forEach((e)=> {
+            let xDist = e.centerCoord.unit.x - puck.centerCoord.unit.x;
+            let yDist = e.centerCoord.unit.y - puck.centerCoord.unit.y;
+            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+
+            if (distance < Puck.radius + Batter.radius) {
+                console.log("inside");
                 //puck.coord.unit = {
                 //    x: HORZ_UNITS - puck.size.unit.x,
                 //    y: puck.coord.unit.y
