@@ -7,6 +7,7 @@ var Puck = require("./Puck");
 var Batter = require("./Batter");
 var Coord = require("./Coord");
 var Goal = require("./Goal");
+var modalFormLogic = require("./modalFormLogic");
 
 $(function () {
 
@@ -60,11 +61,7 @@ $(function () {
     //        type: 'drop' // shadow type
     //    });
     //});
-    
-    $(document).ready(function() {
-        $('#modal_start').openModal();
-        $('.modal-trigger').leanModal();
-    });
+    modalFormLogic();
 });
 
 

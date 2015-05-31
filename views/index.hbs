@@ -1,22 +1,33 @@
-
 <div class="row">
     <div class="col s6">
-        <h1>{{title}}</h1>
-        <p>Welcome to {{title}}</p>
-        <!-- Modal Trigger -->
-        <a class="waves-effect waves-light btn modal-trigger" href="#modal_start">START</a>
-
-        <!-- Modal Structure -->
-        <div id="modal_start" class="modal">
+        <div id="enterName_Modal" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <div class="row row_start">
-                        <h4>START GAME</h4>
-                        <a class="waves-effect waves-light btn-large btn_start">Neues Spiel</a><br>
-                        <a class="waves-effect waves-light btn-large btn_start">Anleitung</a><br>
-                        <a class="waves-effect waves-light btn-large btn_start">Einstellungen</a><br>
-                        <a class="waves-effect waves-light btn-large btn_start">About</a><br>
-                    <a href="#!" class="modal-action modal-close waves-effect waves-light btn-large btn_start">Schließen</a>
-                </div>
+                <form class="col s12" id="player_name_form">
+                    <div class="row">
+                        <div class="col s12"><h4>Willkommen bei ScriptHockey</h4></div>
+                        <div class="col s6">
+                            <p>Dies ist der Versuch im Rahmen eines Studienprojektes Airhockey in JavaScript
+                                nachzubauen.</p>
+
+                            <p>Es kann gleich losgehen, gib nur schnell den Namen ein, mit dem du im Spiel erkannt
+                                werden willst:</p>
+                            <br>
+                            <br>
+                            <br>
+
+                            <div class="input-field">
+                                <input placeholder="Captain Steve Rogers" id="player_name" type="text" class="validate">
+                                <label for="player_name">Spielername</label>
+                            </div>
+                        </div>
+                        <div class="col s6 right right-align">
+                            <img src="images/logo_smaller.png" class=" valign" align="right" WIDTH="200"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" id="submit_player_name_form" class="modal-action waves-effect  btn-flat ">Spiel starten</a>
             </div>
         </div>
     </div>
