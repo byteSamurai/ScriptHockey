@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 500;
+const REFRESH_RATE_MS = 30;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad
@@ -312,17 +312,16 @@ class Field {
         batters.forEach((e)=> {
             let xDist = e.centerCoord.unit.x - puck.centerCoord.unit.x;
             let yDist = e.centerCoord.unit.y - puck.centerCoord.unit.y;
-            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-
-            if (distance < Puck.radius + Batter.radius) {
-                console.log("inside");
-                //puck.coord.unit = {
-                //    x: HORZ_UNITS - puck.size.unit.x,
-                //    y: puck.coord.unit.y
-                //};
-                //
-                //puck.setPosition();
-                //puck.moveTo = Field.collisionDirection(puck.moveTo, VEC_LEFT_RIGHT);
+            let polarCoord = Coord.cartesianToPolar(xDist, yDist);
+            let radiusSum = Puck.radius + Batter.radius;
+            if (polarCoord.distance < radiusSum) {
+                //Schiebe Puck an Rand von Batter
+                polarCoord.distance -= radiusSum;
+                let batterBorderCoord = Coord.polarToCartesian(polarCoord.distance, polarCoord.angle);
+                puck.coord.add(batterBorderCoord);
+                puck.setPosition();
+                //Drehe um 180° zum zentrum
+                puck.moveTo = (polarCoord.angle + Math.PI) % (2 * Math.PI);
 
             }
         });

@@ -57,6 +57,17 @@ class Puck extends GameObject {
     }
 
     /**
+     * Setzt Koordinaten ausgehend vom Mittelpunkt der Figur
+     * @param {Coord} centerCoord
+     */
+    set centerCoord(centerCoord) {
+        "use strict";
+        this._coord = centerCoord.sub(
+            new Coord(PUCK_RADIUS_UNITS, PUCK_RADIUS_UNITS)
+        )
+    }
+
+    /**
      * Setzt Puck auf Position
      */
     setPosition() {
