@@ -15,7 +15,8 @@ html, body{
 body{
    margin: 0;
    padding: 0;
-   overflow:hidden; //it's a ab: no scroll at body
+   overflow: hidden; //it's a app: no scroll at body
+   background: url("../images/normal_bg.jpg")
 }
 
 .modal{

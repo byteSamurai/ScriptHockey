@@ -4,5 +4,10 @@ section#field{
    left: 50%;
    position: fixed;
    display: block;
-   background: #aaa // for demo reasons, change if u want to
+   -webkit-box-shadow: 0 0 20px 10px rgba(0, 0, 0, .5);
+   box-shadow: 0 0 20px 10px rgba(0, 0, 0, .5);
+   border-left: 1px solid white;
+   border-right: 1px solid white;
+
+   background: url("../images/field_bg.jpg") // for demo reasons, change if u want to
 }
