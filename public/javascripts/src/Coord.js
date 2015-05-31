@@ -184,17 +184,17 @@ class Coord {
 
     /**
      * Rechnet Polarkoordinate in kartesiche um
-     * @param {number} speed
+     * @param {number} distance
      * @param {number} moveTo in rad
      * @returns {Coord | object}
      * @param {bool} asNewCoord liefert eine neue Coord-Instanz
      */
-    static polarToCartesian(speed, moveTo, asNewCoord = true) {
+    static polarToCartesian(distance, moveTo, asNewCoord = true) {
         "use strict";
 
         //Polarkoordinaten-Konversion
-        let x = Math.cos(moveTo) * speed;
-        let y = Math.sin(moveTo) * speed;
+        let x = Math.cos(moveTo) * distance;
+        let y = Math.sin(moveTo) * distance;
         // runden
         x = Math.round(x * 100) / 100;
         y = Math.round(y * 100) / 100;
