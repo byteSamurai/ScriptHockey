@@ -161,19 +161,20 @@ class Coord {
     }
 
     /**
-     *
-     * @param Coord
+     * Konvertiert kartesische Koordinaten zu Polarkoordinaten
+     * @param {number} x
+     * @param {number} y
      * @link http://www.w3schools.com/jsref/jsref_atan2.asp
      */
-    static cartesianToPolar(Coord) {
+    static cartesianToPolar(x, y) {
         "use strict";
-        if (Coord.unit.x == 0 && Coord.unit.y == 0) {
+        if (x == 0 && y == 0) {
             throw new Error("It's not possible to get the polar-Coords from origin")
         }
-        let angle = Math.atan2(Coord.unit.y, Coord.unit.x);
+        let angle = Math.atan2(y, x);
         angle = angle < 0 ? angle + Math.PI * 2 : angle;
 
-        let distance = Math.sqrt(Math.pow(Coord.unit.x, 2) + Math.pow(Coord.unit.y, 2));
+        let distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         return {
             angle: angle,
             distance: distance
@@ -185,9 +186,10 @@ class Coord {
      * Rechnet Polarkoordinate in kartesiche um
      * @param {number} speed
      * @param {number} moveTo in rad
-     * @returns {Coord}
+     * @returns {Coord | object}
+     * @param {bool} asNewCoord liefert eine neue Coord-Instanz
      */
-    static polarToCartesian(speed, moveTo) {
+    static polarToCartesian(speed, moveTo, asNewCoord = true) {
         "use strict";
 
         //Polarkoordinaten-Konversion
@@ -197,7 +199,7 @@ class Coord {
         x = Math.round(x * 100) / 100;
         y = Math.round(y * 100) / 100;
 
-        return new Coord(x, y)
+        return asNewCoord ? new Coord(x, y) : {x: x, y: y};
     }
 
     /**
