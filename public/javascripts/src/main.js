@@ -16,7 +16,7 @@ $(function () {
     let puck = new Puck();
 
     //Startcoords
-    puck.coord = new Coord(Field.unitWidth / 2, Field.unitHeight / 2);
+    puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2);
     //StartSpeed
     puck.speed = 0;
     puck.moveTo = Coord.deg2rad(45); // nach links bitte
@@ -28,8 +28,8 @@ $(function () {
     let goalBottom = new Goal(Goal.position.BOTTOM);
 
     //Startcoords
-    playerTop.coord = new Coord(Field.unitWidth / 2, Field.unitHeight / 4);
-    playerBottom.coord = new Coord(Field.unitWidth / 2, 3 * (Field.unitHeight / 4));
+    playerTop.coord = new Coord(Field.unitWidth / 2 - Batter.radius, Field.unitHeight / 4);
+    playerBottom.coord = new Coord(Field.unitWidth / 2 - Batter.radius, 3 * (Field.unitHeight / 4));
     gloalTop.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (gloalTop.size.unit.y / 2));
     goalBottom.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goalBottom.size.unit.y / 2));
 
@@ -41,6 +41,13 @@ $(function () {
     field.deployGameObject(puck);
     field.build();
     field.play();
+
+    $(window).on("game:goal", (event, data)=> {
+        "use strict";
+        console.log("TOOOR", data);
+        field.reset();
+        field.play();
+    });
 
     //Shadow-Animation
     //$(window).on("game:tick", ()=> {

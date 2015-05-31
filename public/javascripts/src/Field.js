@@ -5,12 +5,12 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 10;
+const REFRESH_RATE_MS = 30;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad
 const VEC_LEFT_RIGHT = Math.PI * 0.5; // rad
-const SPEED_INCREASE_STEP = 1;
+const SPEED_INCREASE_STEP = 2;
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
@@ -30,6 +30,7 @@ class Field {
         }
 
         this._gameObjects = new Map();
+        this._initialGameObjectSpecs = new Map();
         this._ID = "field";
         this._height = 0;
         this._width = 0;
@@ -217,6 +218,17 @@ class Field {
         window.clearInterval(this._playInstance);
     }
 
+    reset() {
+        "use strict";
+        let puck = this._gameObjects.get("puck");
+        puck.speed = 0;
+        puck.resetScore();
+        this._gameObjects.forEach((e)=> {
+            e.coord.unit = this._initialGameObjectSpecs.get(e.ID).pos;
+            e.setPosition();
+        });
+    }
+
     /**
      * Fügt neue Spielelemente hinzu
      * @param gameObject
@@ -231,6 +243,12 @@ class Field {
 
         gameObject.setPosition();
         this._gameObjects.set(gameObject.ID, gameObject);
+        this._initialGameObjectSpecs.set(gameObject.ID, {
+            pos: {
+                x: gameObject.coord.unit.x,
+                y: gameObject.coord.unit.y
+            }
+        });
     }
 
     /**
@@ -366,17 +384,21 @@ class Field {
                 let start = e.coord.unit.x;
                 let end = start + e.width;
                 //Oberes Tor
-                if (puck.coord.unit.y <= 0 && puck.coord.unit.x > start && puck.coord.unit.x < end) {
+                if (puck.coord.unit.y <= 0
+                    && puck.coord.unit.x - Puck.radius / 2 > start
+                    && puck.coord.unit.x + Puck.radius / 2 < end) {
                     this.stop();
-                    $(window).trigger("game:tick", {
+                    $(window).trigger("game:goal", {
                         player: "top",
                         score: puck.score
                     })
                 }
 
-                if ((puck.coord.unit.y + 2 * Puck.radius) >= VERT_UNITS - Puck.radius - 1 && puck.coord.unit.x > start && puck.coord.unit.x < end) {
+                if ((puck.coord.unit.y + 2 * Puck.radius) >= VERT_UNITS - Puck.radius
+                    && puck.coord.unit.x - Puck.radius / 2 > start
+                    && puck.coord.unit.x + Puck.radius / 2 < end) {
                     this.stop();
-                    $(window).trigger("game:tick", {
+                    $(window).trigger("game:goal", {
                         player: "bottom",
                         score: puck.score
                     })

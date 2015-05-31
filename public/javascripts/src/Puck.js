@@ -8,7 +8,7 @@ var GameObject = require("./GameObject");
 var Coord = require("./Coord");
 const VELOCITY = -0.5; //ggf. später austauschen gegen Funktion f(t)
 const PUCK_RADIUS_UNITS = 16;
-
+const SCORE_START = 50;
 const SCORE_STEP = 25;
 
 class Puck extends GameObject {
@@ -43,8 +43,14 @@ class Puck extends GameObject {
      */
     addScore() {
         "use strict";
-        this._score += SCORE_STEP
+        this._score += SCORE_STEP;
     }
+
+    resetScore() {
+        "use strict";
+        this._score = SCORE_START;
+    }
+
     /**
      * Liefert die Puck-größe
      * @returns {Coord}
