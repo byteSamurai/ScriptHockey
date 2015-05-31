@@ -23,10 +23,10 @@ class Coord {
 
         if (type === UNITS) {
             this.unit = {x: x, y: y};
-            this._pixel = Field.units2pixel(this._unit);
+            this.refreshFromUnits();
         } else {
             this.pixel = {x: x, y: y};
-            this._unit = Field.pixel2units(this._pixel);
+            this.refreshFromPixels();
         }
     }
 
@@ -45,7 +45,7 @@ class Coord {
             x: this.unit.x * coord.unit.x,
             y: this.unit.y * coord.unit.y
         };
-        this._pixel = Field.units2pixel(this._unit);
+        this.refreshFromUnits();
         return this
     }
 
@@ -59,7 +59,7 @@ class Coord {
             x: this.unit.x / coord.unit.x,
             y: this.unit.y / coord.unit.y
         };
-        this._pixel = Field.units2pixel(this._unit);
+        this.refreshFromUnits();
         return this
     }
 
@@ -73,7 +73,7 @@ class Coord {
             x: this.unit.x + coord.unit.x,
             y: this.unit.y + coord.unit.y
         };
-        this._pixel = Field.units2pixel(this._unit);
+        this.refreshFromUnits();
         return this
     }
 
@@ -87,7 +87,7 @@ class Coord {
             x: this.unit.x - coord.unit.x,
             y: this.unit.y - coord.unit.y
         };
-        this._pixel = Field.units2pixel(this._unit);
+        this.refreshFromUnits();
         return this
     }
 
@@ -101,7 +101,7 @@ class Coord {
             throw new Error("pixel must be an object with a x and y component");
         }
         this._pixel = xyObject;
-        this._unit = Field.pixel2units(this._pixel);
+        this.refreshFromPixels();
     }
 
     /**
@@ -123,7 +123,7 @@ class Coord {
             throw new Error("unit must be an object with a x and y component");
         }
         this._unit = xyObject;
-        this._pixel = Field.units2pixel(this._unit);
+        this.refreshFromUnits();
     }
 
     /**
@@ -163,10 +163,21 @@ class Coord {
     /**
      *
      * @param Coord
+     * @link http://www.w3schools.com/jsref/jsref_atan2.asp
      */
     static cartesianToPolar(Coord) {
         "use strict";
-        return Math.atan2(Coord.unit.x, Coord.unit.y)
+        if (Coord.unit.x == 0 && Coord.unit.y == 0) {
+            throw new Error("It's not possible to get the polar-Coords from origin")
+        }
+        let angle = Math.atan2(Coord.unit.y, Coord.unit.x);
+        angle = angle < 0 ? angle + Math.PI * 2 : angle;
+
+        let distance = Math.sqrt(Math.pow(Coord.unit.x, 2) + Math.pow(Coord.unit.y, 2));
+        return {
+            angle: angle,
+            distance: distance
+        }
 
     }
 
@@ -195,8 +206,6 @@ class Coord {
     static deg2rad(deg) {
         "use strict";
         return deg * (Math.PI / 180)
-
-
     }
 
     /**
