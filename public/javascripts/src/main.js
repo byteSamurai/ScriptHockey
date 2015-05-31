@@ -60,6 +60,11 @@ $(function () {
     //        type: 'drop' // shadow type
     //    });
     //});
+    
+    $(document).ready(function() {
+        $('#modal_start').openModal();
+        $('.modal-trigger').leanModal();
+    });
 });
 
 
