@@ -5,7 +5,7 @@
  */
 var SocketManager = require("./SocketManager");
 
-var modalFormLogic = {
+var modalController = {
     noticeMsg: (msg)=> {
         "use strict";
         Materialize.toast(msg, 4000, "blue darken-2");
@@ -28,21 +28,23 @@ var modalFormLogic = {
             e.preventDefault();
             let playerName = $("#player_name");
             if (playerName.val().length < 1) {
-                modalFormLogic.errorMsg('Bitte geben Sie einen Namen ein!');
+                modalController.errorMsg('Bitte geben Sie einen Namen ein!');
                 playerName.addClass("invalid")
             } else {
                 SocketManager.instance.newPlayer(playerName.val(), (res)=> {
 
-                    if (res.status === "player:nameTaken") {
-                        modalFormLogic.errorMsg(res.msg);
-                        playerName.addClass("invalid");
+                    switch (res.status) {
+                        case "player:nameTaken":
+                            modalController.errorMsg(res.msg);
+                            playerName.addClass("invalid");
+                            break;
+                        case "player:full":
+                            modalController.serverFullModal();
+                            break;
+                        case "player:nameok":
+                            modalController.checkPlayerAmount(true);
                     }
 
-                    if (res.status === "player:ok") {
-
-                        //$("#enterName_Modal").closeModal();
-                        modalFormLogic.checkPlayerAmount(true);
-                    }
                 });
             }
         });
@@ -69,21 +71,34 @@ var modalFormLogic = {
     checkPlayerAmount: (check4waiting = false)=> {
         "use strict";
         SocketManager.instance.playerAmount((res)=> {
-
             if (check4waiting && res.status === "player:waiting") {
-                $("#waiting_Modal").openModal({
-                    dismissible: false
-                });
+                modalController.waitingModal();
                 return;
             }
             if (res.status === "player:full") {
-                $("#serverFull_Modal").openModal({
-                    dismissible: false
-                });
-                return;
+                modalController.serverFullModal();
             }
+        });
+    },
+    /**
+     * Nachricht: Warte auf 2. Spieler
+     */
+    waitingModal: ()=> {
+        "use strict";
+
+        $("#waiting_Modal").openModal({
+            dismissible: false
+        });
+    },
+    /**
+     * Nachricht: Server voll
+     */
+    serverFullModal: ()=> {
+        "use strict";
+        $("#serverFull_Modal").openModal({
+            dismissible: false
         });
     }
 };
 
-module.exports = modalFormLogic;
+module.exports = modalController;

@@ -1,6 +1,7 @@
 module.exports = function (io) {
 
     var userData = {};
+    var gameIsRunning = false;
 
     io.sockets.on("connection", function (socket) {
 
@@ -22,14 +23,20 @@ module.exports = function (io) {
                     return;
                 }
             }
-            //genügend Spieler vorhanden?
-            userData[socket.id] = {
-                name: playerName,
-                socket: socket
-            };
-            callback({
-                status: "player:ok"
-            });
+            //noch platz?
+            if (Object.keys(userData).length < 2) {
+                userData[socket.id] = {
+                    name: playerName,
+                    socket: socket
+                };
+                callback({
+                    status: "player:nameok"
+                });
+            } else {
+                callback({
+                    status: "player:full"
+                })
+            }
         });
 
         /**
@@ -37,27 +44,29 @@ module.exports = function (io) {
          */
         socket.on("player:amount", function (data, callback) {
             "use strict";
+
             if (Object.keys(userData).length < 2) {
                 callback({
                     status: "player:waiting"
                 });
-                return;
-            }
-            if (Object.keys(userData).length > 2) {
-                callback({
-                    status: "player:full"
-                });
-                return;
-            }
-            if (Object.keys(userData).length == 2) {
-                var i = parseInt(Math.random() * 10); // Hälften werden Zufällig verteilt
+
+            } else {
+                //läuft bereits ein Spiel?
+                if (gameIsRunning) {
+                    callback({
+                        status: "player:full"
+                    });
+                    return;
+                }
+
+                var i = parseInt(Math.random() * 10); // Hälften werden zufällig verteilt
                 for (var ID in userData) {
                     var pos = ++i % 2 ? "top" : "bottom";
                     userData[ID].socket.emit("game:start", {playerPos: pos});
                 }
-
-                return;
+                gameIsRunning = true;
             }
+
         });
 
         socket.on("player:IMoved", function (data) {
@@ -78,6 +87,7 @@ module.exports = function (io) {
                 var spielername = userData[socket.id].name;
                 io.emit("game:stop", {msg: "Spieler " + spielername + " hat das Spiel verlassen"});
             }
+            gameIsRunning = false;
             delete userData[socket.id];
         });
     });

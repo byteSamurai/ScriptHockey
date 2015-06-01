@@ -19,6 +19,7 @@ class SocketManager {
 
         //Startgame
         this._socket.on("game:start", (res)=> {
+            console.info("game:start");
             $(".modal").closeModal();
 
             //Hinweis über Spielfeldhälfte
@@ -31,6 +32,7 @@ class SocketManager {
 
         //Stopgame
         this._socket.on("game:stop", (res)=> {
+            console.info("game:stop");
             var modalController = require("./modalController");
             modalController.enterName();
 
@@ -43,6 +45,7 @@ class SocketManager {
 
         //Send Batter-Positions
         this._socket.on("player:enemyMoved", (data)=> {
+            console.info("player:enemyMoved");
             //this._enemybatter.coord=data.coord;
             //this._enemybatter.setPosition();
             //console.log(data);

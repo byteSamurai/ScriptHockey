@@ -31,10 +31,9 @@ $(function () {
     //Startcoords
     goalTop.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (goalTop.size.unit.y / 2));
     goalBottom.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goalBottom.size.unit.y / 2));
-    //Prüfe ob server platz hat
-    modalController.checkPlayerAmount();
-    //Öffne Modalfenster für Namenswahl
+
     modalController.setupEnterNameModal();
+    //Öffne Modalfenster für Namenswahl
     modalController.enterName();
 
     // Deploy game objects and start
