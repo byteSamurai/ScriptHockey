@@ -15,7 +15,7 @@ class Batter extends GameObject {
 
         this._facing = facing;
         this.pixeledRadius = Field.units2pixel(BATTER_RADIUS_UNITS);
-        this._mousetracking = true;
+        this._mousetracking = mousetracking;
 
         $(window).on("resize", (e)=> {
             super.size.refreshFromUnits();
@@ -25,14 +25,12 @@ class Batter extends GameObject {
                 height: super.size.pixel.y
             });
 
-            this.calcPosition(e);
+            this.setPosition();
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
         if (this._mousetracking === true) {
-            $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
-                this.calcPosition(e);
-            }));
+            $(document).on("mousemove", $.throttle(Field.refreshRate, this.moveToNextPosition));
         }
     }
 
@@ -84,7 +82,7 @@ class Batter extends GameObject {
      * @param event
      * @returns {{x: number, y: number}}
      */
-    getNextPosition(event) {
+    getNextPossiblePosition(event) {
         "use strict";
         let fieldLeftOffset = Field.instance.html.offset().left;
         let mouseX = event.pageX;
@@ -126,32 +124,35 @@ class Batter extends GameObject {
     }
 
     /**
-     * Berechnet Position
+     * Holt neue Position und setzt Schläger
      */
-    calcPosition(e) {
+    moveToNextPosition(e) {
         "use strict";
-        if ((typeof e != "undefined") && (e.type == "mousemove")) { //can only retrieve mouse pos if mouse was moved
-            let oldPos = this.coord.unit;
-            this.coord.unit = this.getNextPosition(e);
-            let xDist = this.coord.unit.x - oldPos.x;
-            let yDist = this.coord.unit.y - oldPos.y;
-            let polarCoord = Coord.cartesianToPolar(xDist, yDist);
-            this.speed = polarCoord.distance;
-            this.moveTo = polarCoord.angle;
-        }
-        this.setPosition();
+        this.coord.unit = this.getNextPossiblePosition(e);
+        this.setPositionAfterMouse();
     }
 
     /**
      * Setzt Position
      */
-    setPosition(force = false) {
+    setPosition() {
         "use strict";
-        if (this.speed > 0 || force) {
-            var SocketManager = require("./SocketManager");
-            SocketManager.instance.sendBatterPosition(this.coord);
-            super.setPosition();
-        }
+        super.setPosition();
+    }
+
+    /**
+     * Setzt Position
+     */
+    setPositionAfterMouse() {
+        "use strict";
+        var SocketManager = require("./SocketManager");
+        SocketManager.instance.sendBatterPosition(this._coord);
+        super.setPosition();
+    }
+
+    // should do nothing
+    calcPosition() {
+        "use strict";
     }
 
 }

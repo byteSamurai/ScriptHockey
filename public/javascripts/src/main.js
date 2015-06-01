@@ -63,11 +63,11 @@ $(function () {
 
         let playerBatter = new Batter(ownPosition, true);
         playerBatter.coord = ownStartPosition;
-        playerBatter.setPosition(true);
+        playerBatter.setPosition();
 
         let enemyBatter = new Batter(enemyPosition, false);
         enemyBatter.coord = enemyStartPosition;
-        enemyBatter.setPosition(true);
+        enemyBatter.setPosition();
 
         SocketManager.instance.registerEnemyBatter = enemyBatter;
 
