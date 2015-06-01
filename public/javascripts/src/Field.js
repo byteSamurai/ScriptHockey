@@ -278,7 +278,7 @@ class Field {
      * Fügt neues Dashboard hinzu
      * @param dashboard
      */
-    deployDashboard(dashboard){
+    deployDashboard(dashboard) {
         "use strict";
         let Dashboard = require("./Dashboard");
 

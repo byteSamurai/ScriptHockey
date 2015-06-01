@@ -142,9 +142,12 @@ class Batter extends GameObject {
         this.setPosition();
     }
 
-    setPosition() {
+    /**
+     * Setzt Position
+     */
+    setPosition(force = false) {
         "use strict";
-        if (this.speed > 0) {
+        if (this.speed > 0 || force) {
             var SocketManager = require("./SocketManager");
             SocketManager.instance.sendBatterPosition(this.coord);
             super.setPosition();
