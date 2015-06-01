@@ -127,9 +127,9 @@ class Batter extends GameObject {
             this.coord.unit = this.getNextPosition(e);
             let xDist = this.coord.unit.x - oldPos.x;
             let yDist = this.coord.unit.y - oldPos.y;
-            let distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-            this.speed = distance;
-            //TODO: moveTo
+            let polarCoord = Coord.cartesianToPolar(xDist, yDist);
+            this.speed = polarCoord.distance;
+            this.moveTo = polarCoord.angle;
         }
         this.setPosition();
     }

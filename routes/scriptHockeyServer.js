@@ -10,7 +10,7 @@ module.exports = function (io) {
         //    io.emit("userAmount", ++userAmount);
         //
         /**
-         * Neuer SPieler wird angemeldet
+         * Neuer Spieler wird angemeldet
          */
         socket.on("player:new", function (data, callback) {
             //existiert schon?

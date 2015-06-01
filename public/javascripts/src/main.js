@@ -6,19 +6,22 @@ var Field = require("./Field");
 var Puck = require("./Puck");
 var Batter = require("./Batter");
 var Coord = require("./Coord");
+var Dashboard = require("./Dashboard");
 var SocketManager = require("./SocketManager");
 var Goal = require("./Goal");
 var modalFormLogic = require("./modalFormLogic");
 
 $(function () {
 
-
     //Zeichne Spielfeld
     let field = Field.instance;
     let puck = new Puck();
+    let dashboard = new Dashboard();
+
 
     //Startcoords
     puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2);
+    dashboard.coord = new Coord(0, 0);
     //StartSpeed
     puck.speed = 0;
     puck.moveTo = 0;
@@ -45,6 +48,7 @@ $(function () {
         //field.deployGameObject(playerTop);
         field.deployGameObject(playerBottom);
         field.deployGameObject(puck);
+        field.deployGameObject(dashboard);
         field.build();
         field.play();
     };
@@ -57,6 +61,7 @@ $(function () {
     $(window).on("game:goal", (event, data)=> {
         "use strict";
         console.log("TOOOR", data);
+        dashboard.update("1:0", data.score, 0);
         field.reset();
         field.play();
     });

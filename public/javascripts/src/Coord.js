@@ -168,9 +168,9 @@ class Coord {
      */
     static cartesianToPolar(x, y) {
         "use strict";
-        if (x == 0 && y == 0) {
+       /* if (x == 0 && y == 0) { //TODO wenn schläger nach "unten" gezogen wird sind aber beide 0^^
             throw new Error("It's not possible to get the polar-Coords from origin")
-        }
+        }*/
         let angle = Math.atan2(y, x);
         angle = angle < 0 ? angle + Math.PI * 2 : angle;
 

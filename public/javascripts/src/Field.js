@@ -354,8 +354,11 @@ class Field {
                 puck.setPosition();
                 //Drehe um 180° zum zentrum
                 puck.moveTo = (polarCoord.angle + Math.PI) % (2 * Math.PI);
-
                 puck.speed += SPEED_INCREASE_STEP;
+                //speed+direction -> puck ... batter "stoppen"
+                //puck.speed = e.speed;
+                //puck.moveTo = e.moveTo;
+                //e.moveTo = 0;
                 puck.addScore();
                 console.info("Puck ist nun " + puck.score + " wert");
             }
