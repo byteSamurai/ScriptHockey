@@ -1,62 +1,35 @@
 /**
  * Created by Marko Grgic on 01.06.2015.
  */
-
-var GameObject = require("./GameObject");
+var Coord = require("./Coord");
 var Field = require("./Field");
-class Dashboard extends GameObject {
+
+class Dashboard {
     constructor() {
         "use strict";
+        this._coord = new Coord();
+        this._size = new Coord(Field.unitWidth / 4, Field.unitWidth / 4);
+        //Konkreter Instanz-Name
+        this._ID = "dashboard";
+        this._html = $('<div id="dashboard">' +
+            '<h4>SCORE</h4>' +
+            '<p id="result">0:0</p>' +
+            '<p id="score">0:0</p>' +
+            '</div>');
 
-        super("dashboard",
-            $('<div id="dashboard">' +
-                '<span>' +
-                '<p id="result">Spielstand: 0:0</p></span>' +
-                '<span><p>Punktestand:</p>' +
-                '<p id="score1">Spieler #1: 0</p>' +
-                '<p id="score2">Spieler #2: 0</p>' +
-                '</span> ' +
-                '</div>'),
-            Field.unitWidth / 4,
-            Field.unitHeight / 4);
-
-        $(window).on("resize", ()=> {
-            super.size.refreshFromUnits();
-
-            super.html.css({
-                width: super.size.pixel.x,
-                height: super.size.pixel.y
-            });
-
-            this.calcPosition();
-        }).trigger("resize");
     }
 
-    get width() {
+    get html() {
         "use strict";
-        return super.size.unit.x
+        return this._html;
     }
 
-    get height() {
+    update(player1Data, player2Data) {
         "use strict";
-        return super.size.unit.y;
+        $("#result").text(player1Data.goals + ":" + player2Data.goals);
+        $("#score").text(player1Data.score + ":" + player2Data.score);
     }
 
-    update(result, score1, score2){
-        "use strict";
-        $("#result").text("Spielstand: " + result);
-        $("#score1").text("Spieler #1: " + score1);
-        $("#score2").text("Spieler #2: " + score2);
-    }
-
-    /**
-     * Berechnet Position
-     */
-    calcPosition() {
-        "use strict";
-        super.calcPosition();
-        this.setPosition();
-    }
 }
 
 module.exports = Dashboard;

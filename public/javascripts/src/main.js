@@ -55,8 +55,8 @@ $(function () {
         //field.deployGameObject(playerTop);
         field.deployGameObject(enemyBatter);
         field.deployGameObject(puck);
-        field.deployGameObject(dashboard);
         field.build();
+        field.deployDashboard(dashboard);
         field.play();
     };
 
@@ -68,7 +68,6 @@ $(function () {
     $(window).on("game:goal", (event, data)=> {
         "use strict";
         console.log("TOOOR", data);
-        dashboard.update("1:0", data.score, 0);
         field.reset();
         field.play();
     });
