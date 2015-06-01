@@ -15,7 +15,7 @@ class Batter extends GameObject {
 
         this._facing = facing;
         this.pixeledRadius = Field.units2pixel(BATTER_RADIUS_UNITS);
-
+        this._mousetracking = true;
 
         $(window).on("resize", (e)=> {
             super.size.refreshFromUnits();
@@ -29,7 +29,7 @@ class Batter extends GameObject {
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
-        if (mousetracking === true) {
+        if (this._mousetracking === true) {
             $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
                 this.calcPosition(e);
             }));

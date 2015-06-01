@@ -45,9 +45,9 @@ class SocketManager {
 
         //Send Batter-Positions
         this._socket.on("player:enemyMoved", (data)=> {
-            console.info("player:enemyMoved");
-            //this._enemybatter.coord=data.coord;
-            //this._enemybatter.setPosition();
+
+            this._enemybatter.coord.unit = data.coord;
+            this._enemybatter.setPosition(true);
             //console.log(data);
         })
     }
