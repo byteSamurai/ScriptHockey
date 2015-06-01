@@ -133,6 +133,16 @@ class Batter extends GameObject {
         }
         this.setPosition();
     }
+
+    setPosition() {
+        "use strict";
+        if (this.speed > 0) {
+            var SocketManager = require("./SocketManager");
+            SocketManager.instance.sendBatterPosition(this.coord);
+            super.setPosition();
+        }
+    }
+
 }
 
 module.exports = Batter;

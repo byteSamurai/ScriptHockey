@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 30;
+const REFRESH_RATE_MS = 50;
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad

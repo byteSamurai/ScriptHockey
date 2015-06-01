@@ -9,7 +9,7 @@ var Coord = require("./Coord");
 var Dashboard = require("./Dashboard");
 var SocketManager = require("./SocketManager");
 var Goal = require("./Goal");
-var modalFormLogic = require("./modalFormLogic");
+var modalController = require("./modalController");
 
 $(function () {
 
@@ -32,21 +32,28 @@ $(function () {
     //Startcoords
     goalTop.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (goalTop.size.unit.y / 2));
     goalBottom.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goalBottom.size.unit.y / 2));
-    modalFormLogic.checkPlayerAmount();
-    modalFormLogic.startup();
+    //Prüfe ob server platz hat
+    modalController.checkPlayerAmount();
+    //Öffne Modalfenster für Namenswahl
+    modalController.setupEnterNameModal();
+    modalController.enterName();
+
+    let playerBatter = new Batter(Batter.position.TOP);
+    let enemyBatter = new Batter(Batter.position.BOTTOM);
+    playerBatter.coord = new Coord(Field.unitWidth / 2 - Batter.radius, Field.unitHeight / 4);
+    enemyBatter.coord = new Coord(Field.unitWidth / 2 - Batter.radius, 3 * (Field.unitHeight / 4));
+
+    //SocketManager.instance.registerEnemyBatter=playerTop;
 
     SocketManager.instance.startgameCallback = (facing)=> {
         "use strict";
-        let playerTop = new Batter(Batter.position.TOP);
-        let playerBottom = new Batter(Batter.position.BOTTOM);
-        playerTop.coord = new Coord(Field.unitWidth / 2 - Batter.radius, Field.unitHeight / 4);
-        playerBottom.coord = new Coord(Field.unitWidth / 2 - Batter.radius, 3 * (Field.unitHeight / 4));
+
         let field = Field.instance;
         // Deploy game objects and start
         field.deployGameObject(goalTop);
         field.deployGameObject(goalBottom);
         //field.deployGameObject(playerTop);
-        field.deployGameObject(playerBottom);
+        field.deployGameObject(enemyBatter);
         field.deployGameObject(puck);
         field.deployGameObject(dashboard);
         field.build();

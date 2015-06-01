@@ -16,10 +16,31 @@ class SocketManager {
         this._startCB = null;
         this._stopCB = null;
         this._socket = io.connect();
+
+        //Startgame
         this._socket.on("game:start", ()=> {
             $(".modal").closeModal();
             this._startCB();
         });
+
+        //Stopgame
+        this._socket.on("game:stop", (res)=> {
+            var modalController = require("./modalController");
+            modalController.enterName();
+
+            if (res.msg !== undefined) {
+                modalController.errorMsg(res.msg);
+            }
+
+            this._stopCB();
+        });
+
+        //Send Batter-Positions
+        this._socket.on("player:enemyMoved", (data)=> {
+            //this._enemybatter.coord=data.coord;
+            //this._enemybatter.setPosition();
+            console.log(data.coord);
+        })
     }
 
     /**
@@ -44,6 +65,11 @@ class SocketManager {
             throw new Error("Musst be a Function-referenz")
         }
         this._stopCB = func;
+    }
+
+    set registerEnemyBatter(batter) {
+        "use strict";
+        this._enemybatter = batter;
     }
 
     /**
@@ -80,6 +106,14 @@ class SocketManager {
             console.info(res.status);
             cb(res);
         });
+    }
+
+    /**
+     *  Sendet Batter-Position an den Server
+     */
+    sendBatterPosition(coords) {
+        "use strict";
+        this._socket.emit("player:IMoved", {coords: coords.unit});
     }
 
 }

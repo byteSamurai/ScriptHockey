@@ -6,35 +6,31 @@
 var SocketManager = require("./SocketManager");
 
 var modalFormLogic = {
-    startup: ()=> {
+    errorMsg: (msg)=> {
         "use strict";
-
-        $('#enterName_Modal').openModal({
-            ready: ()=> {
-                "use strict";
-                $('#player_name').focus();
-            },
-            dismissible: false
-        });
-
-
+        Materialize.toast(msg, 4000, "red darken-3");
+    },
+    /**
+     * Bindet notwendige Events für Namenseingabevalidierung
+     */
+    setupEnterNameModal: ()=> {
+        "use strict";
         $("#submit_player_name_form").on("click", (e)=> {
             e.preventDefault();
             $("#player_name_form").submit();
         });
 
-
         $("#player_name_form").on("submit", (e)=> {
             e.preventDefault();
             let playerName = $("#player_name");
             if (playerName.val().length < 1) {
-                Materialize.toast('Bitte geben Sie einen Namen ein!', 4000, "red darken-3");
+                modalFormLogic.errorMsg('Bitte geben Sie einen Namen ein!');
                 playerName.addClass("invalid")
             } else {
                 SocketManager.instance.newPlayer(playerName.val(), (res)=> {
 
                     if (res.status === "player:nameTaken") {
-                        Materialize.toast(res.msg, 4000, "red darken-3");
+                        modalFormLogic.errorMsg(res.msg);
                         playerName.addClass("invalid");
                     }
 
@@ -46,6 +42,21 @@ var modalFormLogic = {
                 });
             }
         });
+    },
+    /**
+     * Modal-Fenster, das Namenswahl durchführt
+     */
+    enterName: ()=> {
+        "use strict";
+
+        $('#enterName_Modal').openModal({
+            ready: ()=> {
+                "use strict";
+                $('#player_name').focus();
+            },
+            dismissible: false
+        });
+
     },
     checkPlayerAmount: (check4waiting = false)=> {
         "use strict";
