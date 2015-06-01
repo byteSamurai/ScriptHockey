@@ -275,21 +275,6 @@ class Field {
     }
 
     /**
-     * Fügt neues Dashboard hinzu
-     * @param dashboard
-     */
-    deployDashboard(dashboard) {
-        "use strict";
-        let Dashboard = require("./Dashboard");
-
-        if (!dashboard instanceof Dashboard) {
-            throw new Error("Must be a dashboard");
-        }
-
-        $("#" + this._ID).append(dashboard.html);
-    }
-
-    /**
      * Löst Wandkollisionen auf
      */
     solvePuckBorderCollisions() {

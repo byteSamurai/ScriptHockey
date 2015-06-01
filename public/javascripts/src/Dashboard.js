@@ -19,6 +19,11 @@ class Dashboard {
 
     }
 
+    build() {
+        "use strict";
+        $('body').append(this._html);
+    }
+
     get html() {
         "use strict";
         return this._html;
