@@ -168,9 +168,13 @@ class Coord {
      */
     static cartesianToPolar(x, y) {
         "use strict";
-       if (x == 0 && y == 0) {
-            throw new Error("It's not possible to get the polar-Coords from origin")
+        if (x == 0 && y == 0) { // Vektor ohne Betrag!!!
+            return {
+                angle: 0,
+                distance: 0
+            }
         }
+
         let angle = Math.atan2(y, x);
         angle = angle < 0 ? angle + Math.PI * 2 : angle;
 
