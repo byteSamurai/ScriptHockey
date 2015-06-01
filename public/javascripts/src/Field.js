@@ -31,11 +31,13 @@ class Field {
 
         this._gameObjects = new Map();
         this._initialGameObjectSpecs = new Map();
+        this._nonPersistenGameObjectsIDs = [];
         this._ID = "field";
         this._height = 0;
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
         this._playInstance = null;
+
 
         this._calcRatioSize();
 
@@ -218,7 +220,14 @@ class Field {
      */
     stop() {
         "use strict";
+
         window.clearInterval(this._playInstance);
+
+        this._nonPersistenGameObjectsIDs.forEach((e)=> {
+            this._gameObjects.delete(e);
+            $("#" + e).remove();
+        });
+
     }
 
     /**
@@ -227,8 +236,11 @@ class Field {
     reset() {
         "use strict";
         let puck = this._gameObjects.get("puck");
-        puck.speed = 0;
-        puck.resetScore();
+        if (puck !== undefined) {
+            puck.speed = 0;
+            puck.resetScore();
+        }
+
         this._gameObjects.forEach((e)=> {
             e.coord.unit = this._initialGameObjectSpecs.get(e.ID).pos;
             e.setPosition();
@@ -238,8 +250,9 @@ class Field {
     /**
      * Fügt neue Spielelemente hinzu
      * @param gameObject
+     * @param persistent
      */
-    deployGameObject(gameObject) {
+    deployGameObject(gameObject, persistent = true) {
         "use strict";
         let GameObject = require("./GameObject");
 
@@ -255,6 +268,10 @@ class Field {
                 y: gameObject.coord.unit.y
             }
         });
+
+        if (persistent === false) {
+            this._nonPersistenGameObjectsIDs.push(gameObject.ID)
+        }
     }
 
     /**

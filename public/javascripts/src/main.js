@@ -20,7 +20,7 @@ $(function () {
 
 
     //Startcoords
-    puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2);
+    puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2 - Puck.radius);
     dashboard.coord = new Coord(0, 0);
     //StartSpeed
     puck.speed = 0;
@@ -38,30 +38,50 @@ $(function () {
     modalController.setupEnterNameModal();
     modalController.enterName();
 
-    let playerBatter = new Batter(Batter.position.TOP);
-    let enemyBatter = new Batter(Batter.position.BOTTOM);
-    playerBatter.coord = new Coord(Field.unitWidth / 2 - Batter.radius, Field.unitHeight / 4);
-    enemyBatter.coord = new Coord(Field.unitWidth / 2 - Batter.radius, 3 * (Field.unitHeight / 4));
+    // Deploy game objects and start
+    field.deployGameObject(goalTop);
+    field.deployGameObject(goalBottom);
 
-    //SocketManager.instance.registerEnemyBatter=playerTop;
 
+    /**
+     * Startet neues Spiel
+     * @param {"top"|"bottom"} facing Spielfeldhälfte
+     */
     SocketManager.instance.startgameCallback = (facing)=> {
         "use strict";
+        let ownPosition, ownStartPosition, enemyPosition, enemyStartPosition;
+        console.log(facing);
+        if (facing == "top") {
+            ownPosition = Batter.position.TOP;
+            ownStartPosition = Batter.position.STARTPOS_TOP();
+            enemyPosition = Batter.position.BOTTOM;
+            enemyStartPosition = Batter.position.STARTPOS_BOTTOM();
+        } else {
+            ownPosition = Batter.position.BOTTOM;
+            ownStartPosition = Batter.position.STARTPOS_BOTTOM();
+            enemyPosition = Batter.position.TOP;
+            enemyStartPosition = Batter.position.STARTPOS_TOP();
+        }
 
-        let field = Field.instance;
-        // Deploy game objects and start
-        field.deployGameObject(goalTop);
-        field.deployGameObject(goalBottom);
-        //field.deployGameObject(playerTop);
-        field.deployGameObject(enemyBatter);
-        field.deployGameObject(puck);
+        let playerBatter = new Batter(ownPosition, true);
+        playerBatter.coord = ownStartPosition;
+
+        let enemyBatter = new Batter(enemyPosition, false);
+        enemyBatter.coord = enemyStartPosition;
+
+        SocketManager.instance.registerEnemyBatter = enemyBatter;
+
+        field.deployGameObject(playerBatter, false);
+        field.deployGameObject(enemyBatter, false);
+        field.deployGameObject(puck, false);
+
         field.build();
-        field.deployDashboard(dashboard);
         field.play();
     };
 
     SocketManager.instance.stopgameCallback = ()=> {
         "use strict";
+
         Field.instance.stop();
     };
 

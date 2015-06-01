@@ -50,7 +50,12 @@ module.exports = function (io) {
                 return;
             }
             if (Object.keys(userData).length == 2) {
-                io.emit("game:start");
+                var i = parseInt(Math.random() * 10); // Hälften werden Zufällig verteilt
+                for (var ID in userData) {
+                    var pos = ++i % 2 ? "top" : "bottom";
+                    userData[ID].socket.emit("game:start", {playerPos: pos});
+                }
+
                 return;
             }
         });

@@ -8,7 +8,7 @@ var Field = require("./Field");
 const BATTER_RADIUS_UNITS = 32;
 
 class Batter extends GameObject {
-    constructor(facing) {
+    constructor(facing, mousetracking = true) {
         "use strict";
 
         super("batter-" + facing, $('<b class="batters"/>'), BATTER_RADIUS_UNITS * 2, BATTER_RADIUS_UNITS * 2);
@@ -29,16 +29,24 @@ class Batter extends GameObject {
         }).trigger("resize");
 
         //on Mousemove, Position neu berechnen
-        $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
-            this.calcPosition(e);
-        }));
+        if (mousetracking === true) {
+            $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
+                this.calcPosition(e);
+            }));
+        }
     }
 
     static get position() {
         "use strict";
         return {
             TOP: "top",
-            BOTTOM: "bottom"
+            STARTPOS_TOP: ()=> {
+                return new Coord(Field.unitWidth / 2 - BATTER_RADIUS_UNITS, Field.unitHeight / 4)
+            },
+            BOTTOM: "bottom",
+            STARTPOS_BOTTOM: ()=> {
+                return new Coord(Field.unitWidth / 2 - BATTER_RADIUS_UNITS, 3 * (Field.unitHeight / 4))
+            }
         }
     }
 

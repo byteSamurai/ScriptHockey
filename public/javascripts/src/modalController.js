@@ -6,6 +6,10 @@
 var SocketManager = require("./SocketManager");
 
 var modalFormLogic = {
+    noticeMsg: (msg)=> {
+        "use strict";
+        Materialize.toast(msg, 4000, "blue darken-2");
+    },
     errorMsg: (msg)=> {
         "use strict";
         Materialize.toast(msg, 4000, "red darken-3");
@@ -58,6 +62,10 @@ var modalFormLogic = {
         });
 
     },
+    /**
+     * Prüfe Server-Befüllung
+     * @param check4waiting
+     */
     checkPlayerAmount: (check4waiting = false)=> {
         "use strict";
         SocketManager.instance.playerAmount((res)=> {

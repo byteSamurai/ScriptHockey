@@ -18,9 +18,15 @@ class SocketManager {
         this._socket = io.connect();
 
         //Startgame
-        this._socket.on("game:start", ()=> {
+        this._socket.on("game:start", (res)=> {
             $(".modal").closeModal();
-            this._startCB();
+
+            //Hinweis über Spielfeldhälfte
+            var modalController = require("./modalController");
+            var position = res.playerPos == "top" ? "oben" : "unten";
+            modalController.noticeMsg("Du spielst " + position);
+
+            this._startCB(res.playerPos);
         });
 
         //Stopgame
@@ -39,7 +45,7 @@ class SocketManager {
         this._socket.on("player:enemyMoved", (data)=> {
             //this._enemybatter.coord=data.coord;
             //this._enemybatter.setPosition();
-            console.log(data.coord);
+            //console.log(data);
         })
     }
 
@@ -111,9 +117,9 @@ class SocketManager {
     /**
      *  Sendet Batter-Position an den Server
      */
-    sendBatterPosition(coords) {
+    sendBatterPosition(coord) {
         "use strict";
-        this._socket.emit("player:IMoved", {coords: coords.unit});
+        this._socket.emit("player:IMoved", {coord: coord.unit});
     }
 
 }
