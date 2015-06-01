@@ -21,7 +21,6 @@ $(function () {
 
     //Startcoords
     puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2 - Puck.radius);
-    dashboard.coord = new Coord(0, 0);
     //StartSpeed
     puck.speed = 0;
     puck.moveTo = 0;
@@ -50,7 +49,7 @@ $(function () {
     SocketManager.instance.startgameCallback = (facing)=> {
         "use strict";
         let ownPosition, ownStartPosition, enemyPosition, enemyStartPosition;
-        console.log(facing);
+
         if (facing == "top") {
             ownPosition = Batter.position.TOP;
             ownStartPosition = Batter.position.STARTPOS_TOP();
@@ -65,9 +64,11 @@ $(function () {
 
         let playerBatter = new Batter(ownPosition, true);
         playerBatter.coord = ownStartPosition;
+        playerBatter.setPosition();
 
         let enemyBatter = new Batter(enemyPosition, false);
         enemyBatter.coord = enemyStartPosition;
+        enemyBatter.setPosition();
 
         SocketManager.instance.registerEnemyBatter = enemyBatter;
 
