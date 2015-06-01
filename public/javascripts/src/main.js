@@ -40,7 +40,7 @@ $(function () {
     // Deploy game objects and start
     field.deployGameObject(goalTop);
     field.deployGameObject(goalBottom);
-
+    dashboard.build();
 
     /**
      * Startet neues Spiel
