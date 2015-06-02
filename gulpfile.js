@@ -12,7 +12,7 @@
 var jsOutput = ['./public/javascripts/dist/**/*.js'];
 var cssFiles = ['./public/css/**/*.css'];
 var htmlFiles = ['./views/**/*.hbs'];
-var jsBrowserifyFiles = ['./public/javascripts/src/main.js', './public/javascripts/src/**/*.js'];
+var jsBrowserifyFiles = ['./public/javascripts/src/main.js', './public/javascripts/src/**/*.js', './gameParams.js'];
 /**
  * Setz produktiv-Umgebung
  * zu setzen bei Aufruf

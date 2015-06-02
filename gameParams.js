@@ -5,15 +5,16 @@
  */
 // Alle Angaben in UNITS, nicht in Pixel!
 var PARAMS = {
-    refreshRate: 50,
+    refreshRate: 30,
     vertCollVec: Math.PI * 0.5,//rad
     horzCollVec: Math.PI,//rad
     puck: {
         radius: 16,
         scoreIncreaseStep: 25,
         defaultScore: 50,
-        speedIncreaseStep: 2,
+        speedIncreaseStep: 5,
         defaultSpeed: 0,
+        maxSpeed: 40,
         defaultMoveTo: 0, // in grad!!!!
         defaultCoord: {
             x: null,
@@ -26,7 +27,7 @@ var PARAMS = {
         height: 1000
     },
     batter: {
-        radius: 32
+        radius: 48
     },
     goal: {
         positionTop: {
