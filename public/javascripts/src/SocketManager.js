@@ -15,6 +15,7 @@ class SocketManager {
         }
         this._startCB = null;
         this._stopCB = null;
+        this._gameObjectRefresh = null;
         this._socket = io.connect();
 
         //Startgame
@@ -39,16 +40,15 @@ class SocketManager {
             if (res.msg !== undefined) {
                 modalController.errorMsg(res.msg);
             }
-
             this._stopCB();
         });
 
-        //Send Batter-Positions
-        this._socket.on("player:enemyMoved", (data)=> {
 
-            this._enemybatter.coord.unit = data.coord;
+        //Aktualisiere Spielfeld
+        this._socket.on("game:refresh", (data)=> {
+            this._enemybatter.coord.unit = data.enemyCoord;
             this._enemybatter.setPosition();
-            //console.log(data);
+            this._gameObjectRefresh();
         })
     }
 
@@ -80,6 +80,12 @@ class SocketManager {
         "use strict";
         this._enemybatter = batter;
     }
+
+    set registerGameRefreshFunktion(func) {
+        "use strict";
+        this._gameObjectRefresh = func;
+    }
+
 
     /**
      * Spielfeld sollte nur eine Instanz sein

@@ -5,7 +5,7 @@
  */
 
 const RATIO = 0.666666;
-const REFRESH_RATE_MS = 50;
+const REFRESH_RATE_MS = 50; // Muss mit FieldDrawer übereinstimmen
 const VERT_UNITS = 1000;
 const HORZ_UNITS = VERT_UNITS * RATIO;
 const VEC_BOTTOM_TOP = Math.PI; //rad
@@ -37,6 +37,7 @@ class Field {
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
         this._playInstance = null;
+        this._ownPosition = null;
 
 
         this._calcRatioSize();
@@ -137,6 +138,22 @@ class Field {
     }
 
     /**
+     * Die Position des Spielers
+     */
+    static get ownPosition() {
+        "use strict";
+        return this._ownPosition;
+    }
+
+    static set ownPosition(v) {
+        "use strict";
+        if (v !== "top" && v !== "bottom") {
+            throw new Error("Must be String \"top\" oder \"bottom\"")
+        }
+        this._ownPosition = v;
+    }
+
+    /**
      * Weite in Pixel
      * @returns {number}
      */
@@ -199,20 +216,20 @@ class Field {
     /**
      * Zeichnet alle Gameobjects ein
      */
-    play() {
+    refresh() {
         "use strict";
-        this._playInstance = window.setInterval(()=> {
-            //Berechne Position aller Objekte
-            this._gameObjects.forEach((e)=> {
-                e.calcPosition();
-            });
-            this.detectGoalCollision();
-            this.solvePuckBorderCollisions();
-            this.solveBatterCollisions();
+        //this._playInstance = window.setInterval(()=> {
+        //Berechne Position aller Objekte
+        //this._gameObjects.forEach((e)=> {
+        //    e.calcPosition();
+        //});
+        //this.detectGoalCollision();
+        //this.solvePuckBorderCollisions();
+        //this.solveBatterCollisions();
 
-            $(window).trigger("game:tick");
+        //$(window).trigger("game:tick");
 
-        }, REFRESH_RATE_MS);
+        //}, REFRESH_RATE_MS);
     }
 
     /**

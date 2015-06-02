@@ -2,6 +2,8 @@ module.exports = function (io) {
 
     var userData = {};
     var gameIsRunning = false;
+    var gameRefresh = require("./gameRefresh")(io, userData);
+
 
     io.sockets.on("connection", function (socket) {
 
@@ -15,7 +17,9 @@ module.exports = function (io) {
             for (var ID in userData) {
                 "use strict";
                 // Wenn name schon vorhanden und nicht der eigene
-                if (userData[ID].name === playerName && socket.id !== ID) {
+                if (userData.hasOwnProperty(ID) &&
+                    userData[ID].name === playerName && socket.id !== ID) {
+
                     callback({
                         status: "player:nameTaken",
                         msg: "Name bereits vorhanden....sry"
@@ -62,20 +66,24 @@ module.exports = function (io) {
                 var i = parseInt(Math.random() * 10); // Hälften werden zufällig verteilt
                 for (var ID in userData) {
                     var pos = ++i % 2 ? "top" : "bottom";
-                    userData[ID].socket.emit("game:start", {playerPos: pos});
+                    if (userData.hasOwnProperty(ID)) {
+                        userData[ID].socket.emit("game:start", {playerPos: pos});
+                    }
                 }
+                gameRefresh.start();
                 gameIsRunning = true;
             }
 
         });
 
         socket.on("player:IMoved", function (data) {
-            //Sende anderem Spieler Event
-            for (var socketID in userData) {
-                if (socketID != socket.id) {
-                    userData[socketID].socket.emit("player:enemyMoved", {coord: data.coord});
-                    return;
-                }
+            var socketIDs = Object.keys(userData);
+            var curSocketID = socketIDs[socketIDs.indexOf(socket.id)];
+            var enemySocketID = socketIDs[(socketIDs.indexOf(socket.id) + 1) % 2];
+
+            if (userData.hasOwnProperty(curSocketID) && userData.hasOwnProperty(enemySocketID)) { // Wenn Spieler im Spiel
+                userData[curSocketID].coord = data.coord;
+                userData[enemySocketID].enemyCoord = data.coord;
             }
         });
 
@@ -87,6 +95,7 @@ module.exports = function (io) {
                 var spielername = userData[socket.id].name;
                 io.emit("game:stop", {msg: "Spieler " + spielername + " hat das Spiel verlassen"});
             }
+            gameRefresh.stop();
             gameIsRunning = false;
             delete userData[socket.id];
         });

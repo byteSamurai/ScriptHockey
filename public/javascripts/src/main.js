@@ -50,6 +50,7 @@ $(function () {
         let ownPosition, ownStartPosition, enemyPosition, enemyStartPosition;
 
         if (facing == "top") {
+            field.ownPosition = "top";
             ownPosition = Batter.position.TOP;
             ownStartPosition = Batter.position.STARTPOS_TOP();
             enemyPosition = Batter.position.BOTTOM;
@@ -76,7 +77,7 @@ $(function () {
         field.deployGameObject(puck, false);
 
         field.build();
-        field.play();
+        SocketManager.instance.registerGameRefreshFunktion = field.refresh;
     };
 
     SocketManager.instance.stopgameCallback = ()=> {
@@ -89,7 +90,7 @@ $(function () {
         "use strict";
         console.log("TOOOR", data);
         field.reset();
-        field.play();
+        field.refresh();
     });
 
     //Shadow-Animation
