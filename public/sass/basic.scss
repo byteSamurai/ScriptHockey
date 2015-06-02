@@ -32,6 +32,17 @@ body{
 .row_start{
   margin-left: 20% !important;
 }
+.preloader-wrapper.big{
+   margin-top: 10% !important;
+   margin-left: 45% !important;
+   width: 100px !important;
+   height: 100px !important;
+ }
+
+.modal.modal-fixed-footer {
+  padding: 0px;
+  height: 50% !important;
+}
 
 .btn_start{
   width: 400px;
