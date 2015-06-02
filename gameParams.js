@@ -6,6 +6,7 @@
 // Alle Angaben in UNITS, nicht in Pixel!
 var PARAMS = {
     refreshRate: 30,
+    timeoutAfterGoal: 1500,
     vertCollVec: Math.PI * 0.5,//rad
     horzCollVec: Math.PI,//rad
     puck: {

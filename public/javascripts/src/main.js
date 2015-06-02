@@ -75,13 +75,7 @@ $(function () {
     };
 
     socketManager.stopgameCallback = field.stop;
-
-    $(window).on("game:goal", (event, data)=> {
-        "use strict";
-        console.log("TOOOR", data);
-        field.reset();
-        field.refresh();
-    });
+    socketManager.updateDashboardCallback = Dashboard.update;
 
     //Shadow-Animation
     //$(window).on("game:tick", ()=> {

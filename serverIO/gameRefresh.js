@@ -54,14 +54,28 @@ module.exports = function (io, userData) {
     var triggerGoal = function (type) {
         gameInstanz.freezePuck();
         //Timeout verhindert mehrer Toor in zu kurzer Zeit und Prell-Pucks
-        console.log("tor:", type);
-
-        //for (var socketID in  userData) {
-        //    if (userData.hasOwnProperty(socketID)) {
-        //        userData[socketID].socket.emit("game:goal",
-        //            {game: gameData, enemyCoord: userData[socketID].enemyCoord})
-        //    }
-        //}
+        for (var ID in userData) {
+            //Weiter zum nächsten Benutzer
+            if (userData.hasOwnProperty(ID) && userData[ID].position != type) {
+                continue;
+            }
+            //Tore eintragen
+            if (userData.hasOwnProperty(ID) && userData[ID].position == type) {
+                userData[ID].score += gameData.puck.score;
+                userData[ID].goals += 1;
+                break;
+            }
+        }
+        //Aktualisiere Dashboard
+        gameInstanz.updateDashboard();
+        setTimeout(function () {
+            "use strict";
+            gameData.puck.coord = PARAMS.puck.defaultCoord; // Zurücksetzen
+            gameData.puck.moveTo = PARAMS.puck.defaultMoveTo;
+            gameData.puck.speed = PARAMS.puck.defaultSpeed;
+            gameData.puck.score = 0;
+            gameInstanz.releasePuck();
+        }, PARAMS.timeoutAfterGoal);
     };
 
     /**
@@ -202,7 +216,13 @@ module.exports = function (io, userData) {
         start: function () {
             //reset data
             gameData = extend({}, initialGameData);
-
+            //Setzte Scores und goals zurück
+            for (var ID in  userData) {
+                if (userData.hasOwnProperty(ID)) {
+                    userData[ID].goals = 0;
+                    userData[ID].score = 0;
+                }
+            }
 
             intervalInstance = setInterval(function () {
                 if (puckIsFrozen !== true) {
@@ -230,6 +250,30 @@ module.exports = function (io, userData) {
         },
         releasePuck: function () {
             puckIsFrozen = true;
+        },
+        /**
+         * Aktualsiert das Dashboard
+         */
+        updateDashboard: function () {
+            //Benachrichtige Spieler
+
+            var dashboardData = [];
+
+            for (var socketID in  userData) {
+                if (userData.hasOwnProperty(socketID)) {
+                    dashboardData.push({
+                        socketID: socketID,
+                        name: userData[socketID].name,
+                        goals: userData[socketID].goals,
+                        score: userData[socketID].score
+                    });
+                }
+            }
+            dashboardData.forEach(function (e) {
+                userData[e.socketID].socket.emit("game:goal",
+                    dashboardData
+                )
+            });
         }
     };
 

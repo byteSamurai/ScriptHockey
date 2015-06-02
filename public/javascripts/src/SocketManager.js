@@ -16,6 +16,7 @@ class SocketManager {
         }
         this._startCB = null;
         this._stopCB = null;
+        this._dashboardUpdate = null;
         this._socket = io.connect();
 
         //Startgame
@@ -55,9 +56,24 @@ class SocketManager {
                 = data.game.puck.coord;
             //aktualisiere spielfeld
             Field.instance.refresh();
-        })
+        });
+
+        this._socket.on("game:goal", (data)=> {
+            this._dashboardUpdate(data[0], data[1]);
+        });
     }
 
+    /**
+     * Funktion um Dashboard zu aktuslisieren
+     * @param func
+     */
+    set updateDashboardCallback(func) {
+        "use strict";
+        if (typeof func !== "function") {
+            throw new Error("Musst be a Function-referenz")
+        }
+        this._dashboardUpdate = func;
+    }
     /**
      * Setzt die Start-Funktion um das Spiel zu beginnen
      * @param func

@@ -29,7 +29,7 @@ class Dashboard {
         return this._html;
     }
 
-    update(player1Data, player2Data) {
+    static update(player1Data, player2Data) {
         "use strict";
         $("#result").text(player1Data.goals + ":" + player2Data.goals);
         $("#score").text(player1Data.score + ":" + player2Data.score);
