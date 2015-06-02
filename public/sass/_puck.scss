@@ -3,4 +3,5 @@ b#puck{
    @include border-radius(1000px); // yes, 1000px is correct!
    background-color: black;
    position: absolute;
+   @include transition(all 35ms linear) // mir vorbehalt
 }
