@@ -30,10 +30,17 @@ class Batter extends GameObject {
 
         //on Mousemove, Position neu berechnen
         if (this._mousetracking === true) {
-            $(document).on("mousemove", $.throttle(Field.refreshRate, this.moveToNextPosition));
+            $(document).on("mousemove", $.throttle(Field.refreshRate, (e)=> {
+                this._coord.unit = this.getFieldFacePosition(e);
+                this.setPosition();
+            }));
         }
     }
 
+    /**
+     * Liefert Informationen zu den Startpositionen der schläger
+     * @returns {{TOP: string, STARTPOS_TOP: Function, BOTTOM: string, STARTPOS_BOTTOM: Function}}
+     */
     static get position() {
         "use strict";
         return {
@@ -82,7 +89,7 @@ class Batter extends GameObject {
      * @param event
      * @returns {{x: number, y: number}}
      */
-    getNextPossiblePosition(event) {
+    getFieldFacePosition(event) {
         "use strict";
         let fieldLeftOffset = Field.instance.html.offset().left;
         let mouseX = event.pageX;
@@ -124,31 +131,17 @@ class Batter extends GameObject {
     }
 
     /**
-     * Holt neue Position und setzt Schläger
-     */
-    moveToNextPosition(e) {
-        "use strict";
-        this.coord.unit = this.getNextPossiblePosition(e);
-        this.setPositionAfterMouse();
-    }
-
-    /**
      * Setzt Position
      */
     setPosition() {
         "use strict";
+        if (this._mousetracking === true) {
+            var SocketManager = require("./SocketManager");
+            SocketManager.instance.sendBatterPosition(this._coord);
+        }
         super.setPosition();
     }
 
-    /**
-     * Setzt Position
-     */
-    setPositionAfterMouse() {
-        "use strict";
-        var SocketManager = require("./SocketManager");
-        SocketManager.instance.sendBatterPosition(this._coord);
-        super.setPosition();
-    }
 
     // should do nothing
     calcPosition() {
