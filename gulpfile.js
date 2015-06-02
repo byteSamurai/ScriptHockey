@@ -71,7 +71,7 @@ gulp.task("server", function () {
         nodemon({
             script: './bin/www',
             ext: 'js hbs',
-            watch: ['server_lib','views','routes'],
+            watch: ['serverIO', 'views', 'routes'],
             env: {'NODE_ENV': 'development'}
         });
     }
