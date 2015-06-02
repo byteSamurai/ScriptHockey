@@ -67,6 +67,7 @@ module.exports = function (io) {
                 for (var ID in userData) {
                     var pos = ++i % 2 ? "top" : "bottom";
                     if (userData.hasOwnProperty(ID)) {
+                        userData[ID].position = pos;
                         userData[ID].socket.emit("game:start", {playerPos: pos});
                     }
                 }

@@ -6,7 +6,7 @@
 
 var GameObject = require("./GameObject");
 var Coord = require("./Coord");
-var PARAMS = require("./../../../GAME_PARAMETERS");
+var PARAMS = require("./../../../gameParams");
 
 const PUCK_RADIUS_UNITS = PARAMS.puck.radius;
 const SCORE_START = PARAMS.puck.defaultScore;

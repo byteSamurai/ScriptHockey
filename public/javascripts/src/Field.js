@@ -4,14 +4,14 @@
  * Time: 18:08
  */
 
-var PARAMS = require("./../../../GAME_PARAMETERS");
+var PARAMS = require("./../../../gameParams");
 
 const RATIO = PARAMS.field.ratio;
 const REFRESH_RATE_MS = PARAMS.refreshRate;
 const VERT_UNITS = PARAMS.field.height;
 const HORZ_UNITS = PARAMS.field.width;
-const VEC_BOTTOM_TOP = PARAMS.horzCollVec; //rad
-const VEC_LEFT_RIGHT = PARAMS.horzCollVec; // rad
+const HORZ_COLLISION = PARAMS.horzCollVec; //rad
+const VERT_COLLISION = PARAMS.vertCollVec; // rad
 const SPEED_INCREASE_STEP = PARAMS.puck.speedIncreaseStep;
 
 let singleton = Symbol();
@@ -39,8 +39,6 @@ class Field {
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
         this._playInstance = null;
-        this._ownPosition = null;
-
 
         this._calcRatioSize();
 
@@ -139,21 +137,6 @@ class Field {
         return REFRESH_RATE_MS;
     }
 
-    /**
-     * Die Position des Spielers
-     */
-    static get ownPosition() {
-        "use strict";
-        return this._ownPosition;
-    }
-
-    static set ownPosition(v) {
-        "use strict";
-        if (v !== "top" && v !== "bottom") {
-            throw new Error("Must be String \"top\" oder \"bottom\"")
-        }
-        this._ownPosition = v;
-    }
 
     /**
      * Weite in Pixel
@@ -320,7 +303,7 @@ class Field {
                 x: HORZ_UNITS - puck.size.unit.x,
                 y: puck.coord.unit.y
             };
-            wallDirection = VEC_LEFT_RIGHT;
+            wallDirection = VERT_COLLISION;
         } else
         // Left border?
         if (puckPos.x < 0) {
@@ -328,7 +311,7 @@ class Field {
                 x: 0,
                 y: puck.coord.unit.y
             };
-            wallDirection = VEC_LEFT_RIGHT;
+            wallDirection = VERT_COLLISION;
         }
 
         //Bottom border?
@@ -337,7 +320,7 @@ class Field {
                 x: puck.coord.unit.x,
                 y: VERT_UNITS - puck.size.unit.y
             };
-            wallDirection = VEC_BOTTOM_TOP;
+            wallDirection = HORZ_COLLISION;
         } else
         //Top border?
         if (puckPos.y < 0) {
@@ -345,7 +328,7 @@ class Field {
                 x: puck.coord.unit.x,
                 y: 0
             };
-            wallDirection = VEC_BOTTOM_TOP;
+            wallDirection = HORZ_COLLISION;
         }
 
         if (wallDirection != undefined) {

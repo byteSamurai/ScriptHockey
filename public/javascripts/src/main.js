@@ -10,7 +10,7 @@ var Dashboard = require("./Dashboard");
 var SocketManager = require("./SocketManager");
 var Goal = require("./Goal");
 var modalController = require("./modalController");
-var PARAMS = require("./../../../GAME_PARAMETERS");
+var PARAMS = require("./../../../gameParams");
 
 $(function () {
 
@@ -19,7 +19,6 @@ $(function () {
     let socketManager = SocketManager.instance;
     let puck = new Puck();
     let dashboard = new Dashboard();
-
 
     //Startcoords
     puck.coord.unit = PARAMS.puck.defaultCoord;
@@ -75,11 +74,7 @@ $(function () {
         field.build();
     };
 
-    socketManager.stopgameCallback = ()=> {
-        "use strict";
-
-        Field.instance.stop();
-    };
+    socketManager.stopgameCallback = field.stop;
 
     $(window).on("game:goal", (event, data)=> {
         "use strict";
