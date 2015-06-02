@@ -7,7 +7,7 @@ var socketio = require('socket.io');
 
 var socketServer = function (app, server) {
     var io = socketio.listen(server);
-    require("./routes/scriptHockeyServer")(io);
+    require("./scriptHockeyServer")(io);
 };
 
 module.exports.socketServer=socketServer;

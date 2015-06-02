@@ -6,7 +6,7 @@ var ip = require("ip");
 var app = require('../app');
 var debug = require('debug')('ScriptHockey:server');
 var http = require('http');
-var socketIO = require('./../socket.io');
+var socketIO = require('./../serverIO/socketSetup.io');
 
 /**
  * Get port from environment and store in Express.
