@@ -180,6 +180,11 @@ class Field {
         return this._fieldHTML;
     }
 
+    get puck() {
+        "use strict";
+        return this._gameObjects.get("puck");
+    }
+
     /**
      * Berechnet die Breite des Feldes
      * @private
@@ -218,18 +223,13 @@ class Field {
      */
     refresh() {
         "use strict";
-        //this._playInstance = window.setInterval(()=> {
         //Berechne Position aller Objekte
-        //this._gameObjects.forEach((e)=> {
-        //    e.calcPosition();
-        //});
+        this.puck.setPosition();
         //this.detectGoalCollision();
         //this.solvePuckBorderCollisions();
         //this.solveBatterCollisions();
 
-        //$(window).trigger("game:tick");
-
-        //}, REFRESH_RATE_MS);
+        $(window).trigger("game:tick");
     }
 
     /**
@@ -308,12 +308,12 @@ class Field {
             return
         }
 
-        let ePos = puck.coord.unit;
-        let eSize = puck.size.unit;
+        let puckPos = puck.coord.unit;
+        let puckSize = puck.size.unit;
         var wallDirection;
 
         //Right border
-        if (ePos.x + eSize.x > HORZ_UNITS) {
+        if (puckPos.x + puckSize.x > HORZ_UNITS) {
             puck.coord.unit = {
                 x: HORZ_UNITS - puck.size.unit.x,
                 y: puck.coord.unit.y
@@ -321,7 +321,7 @@ class Field {
             wallDirection = VEC_LEFT_RIGHT;
         } else
         // Left border?
-        if (ePos.x < 0) {
+        if (puckPos.x < 0) {
             puck.coord.unit = {
                 x: 0,
                 y: puck.coord.unit.y
@@ -330,7 +330,7 @@ class Field {
         }
 
         //Bottom border?
-        if (ePos.y + eSize.y > VERT_UNITS) {
+        if (puckPos.y + puckSize.y > VERT_UNITS) {
             puck.coord.unit = {
                 x: puck.coord.unit.x,
                 y: VERT_UNITS - puck.size.unit.y
@@ -338,7 +338,7 @@ class Field {
             wallDirection = VEC_BOTTOM_TOP;
         } else
         //Top border?
-        if (ePos.y < 0) {
+        if (puckPos.y < 0) {
             puck.coord.unit = {
                 x: puck.coord.unit.x,
                 y: 0

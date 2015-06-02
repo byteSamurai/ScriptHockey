@@ -6,6 +6,7 @@
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
+let Field = require("./Field");
 
 class SocketManager {
     constructor(enforcer) {
@@ -15,7 +16,6 @@ class SocketManager {
         }
         this._startCB = null;
         this._stopCB = null;
-        this._gameObjectRefresh = null;
         this._socket = io.connect();
 
         //Startgame
@@ -43,12 +43,19 @@ class SocketManager {
             this._stopCB();
         });
 
+        var field = Field.instance;
 
         //Aktualisiere Spielfeld
         this._socket.on("game:refresh", (data)=> {
+            //bewege feindlichen schläger
             this._enemybatter.coord.unit = data.enemyCoord;
             this._enemybatter.setPosition();
-            this._gameObjectRefresh();
+            //aktualisiere Puck
+            field.puck.coord.unit
+                = data.game.puck.coord;
+            console.log(field.puck.coord.unit);
+            //aktualisiere spielfeld
+            Field.instance.refresh();
         })
     }
 
@@ -80,12 +87,6 @@ class SocketManager {
         "use strict";
         this._enemybatter = batter;
     }
-
-    set registerGameRefreshFunktion(func) {
-        "use strict";
-        this._gameObjectRefresh = func;
-    }
-
 
     /**
      * Spielfeld sollte nur eine Instanz sein
