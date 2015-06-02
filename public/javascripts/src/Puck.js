@@ -6,10 +6,11 @@
 
 var GameObject = require("./GameObject");
 var Coord = require("./Coord");
-const VELOCITY = -0.5; //ggf. später austauschen gegen Funktion f(t)
-const PUCK_RADIUS_UNITS = 16;
-const SCORE_START = 50;
-const SCORE_STEP = 25;
+var PARAMS = require("./../../../gameParams");
+
+const PUCK_RADIUS_UNITS = PARAMS.puck.radius;
+const SCORE_START = PARAMS.puck.defaultScore;
+const SCORE_STEP = PARAMS.puck.scoreIncreaseStep;
 
 class Puck extends GameObject {
 

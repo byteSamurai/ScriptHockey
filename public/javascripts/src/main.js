@@ -10,27 +10,23 @@ var Dashboard = require("./Dashboard");
 var SocketManager = require("./SocketManager");
 var Goal = require("./Goal");
 var modalController = require("./modalController");
+var PARAMS = require("./../../../gameParams");
 
 $(function () {
 
     //Zeichne Spielfeld
     let field = Field.instance;
+    let socketManager = SocketManager.instance;
     let puck = new Puck();
     let dashboard = new Dashboard();
 
-
     //Startcoords
-    puck.coord = new Coord(Field.unitWidth / 2 - Puck.radius, Field.unitHeight / 2 - Puck.radius);
-    //StartSpeed
-    puck.speed = 0;
-    puck.moveTo = 0;
+    puck.coord.unit = PARAMS.puck.defaultCoord;
+    puck.speed = PARAMS.puck.defaultSpeed;
+    puck.moveTo = PARAMS.puck.defaultMoveTo;
 
     let goalTop = new Goal(Goal.position.TOP);
     let goalBottom = new Goal(Goal.position.BOTTOM);
-
-    //Startcoords
-    goalTop.coord = new Coord((Field.unitWidth / 4) * 1.5, 0 - (goalTop.size.unit.y / 2));
-    goalBottom.coord = new Coord((Field.unitWidth / 4) * 1.5, Field.unitHeight - (goalBottom.size.unit.y / 2));
 
     modalController.setupEnterNameModal();
     //Öffne Modalfenster für Namenswahl
@@ -45,11 +41,12 @@ $(function () {
      * Startet neues Spiel
      * @param {"top"|"bottom"} facing Spielfeldhälfte
      */
-    SocketManager.instance.startgameCallback = (facing)=> {
+    socketManager.startgameCallback = (facing)=> {
         "use strict";
         let ownPosition, ownStartPosition, enemyPosition, enemyStartPosition;
 
         if (facing == "top") {
+            field.ownPosition = "top";
             ownPosition = Batter.position.TOP;
             ownStartPosition = Batter.position.STARTPOS_TOP();
             enemyPosition = Batter.position.BOTTOM;
@@ -69,27 +66,21 @@ $(function () {
         enemyBatter.coord = enemyStartPosition;
         enemyBatter.setPosition();
 
-        SocketManager.instance.registerEnemyBatter = enemyBatter;
+        socketManager.registerEnemyBatter = enemyBatter;
 
         field.deployGameObject(playerBatter, false);
         field.deployGameObject(enemyBatter, false);
         field.deployGameObject(puck, false);
-
         field.build();
-        field.play();
     };
 
-    SocketManager.instance.stopgameCallback = ()=> {
-        "use strict";
-
-        Field.instance.stop();
-    };
+    socketManager.stopgameCallback = field.stop;
 
     $(window).on("game:goal", (event, data)=> {
         "use strict";
         console.log("TOOOR", data);
         field.reset();
-        field.play();
+        field.refresh();
     });
 
     //Shadow-Animation

@@ -3,6 +3,8 @@
   @include border-radius(1000px); // yes, 1000px is correct!
   position: absolute;
   z-index: 900;
+   @include transition(all 35ms linear) // mit vorbehalt
+
 }
 
 b#batter-top {

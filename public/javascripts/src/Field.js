@@ -4,13 +4,15 @@
  * Time: 18:08
  */
 
-const RATIO = 0.666666;
-const REFRESH_RATE_MS = 50;
-const VERT_UNITS = 1000;
-const HORZ_UNITS = VERT_UNITS * RATIO;
-const VEC_BOTTOM_TOP = Math.PI; //rad
-const VEC_LEFT_RIGHT = Math.PI * 0.5; // rad
-const SPEED_INCREASE_STEP = 2;
+var PARAMS = require("./../../../gameParams");
+
+const RATIO = PARAMS.field.ratio;
+const REFRESH_RATE_MS = PARAMS.refreshRate;
+const VERT_UNITS = PARAMS.field.height;
+const HORZ_UNITS = PARAMS.field.width;
+const HORZ_COLLISION = PARAMS.horzCollVec; //rad
+const VERT_COLLISION = PARAMS.vertCollVec; // rad
+const SPEED_INCREASE_STEP = PARAMS.puck.speedIncreaseStep;
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
@@ -37,7 +39,6 @@ class Field {
         this._width = 0;
         this._fieldHTML = $("<section id=\"field\">");
         this._playInstance = null;
-
 
         this._calcRatioSize();
 
@@ -136,6 +137,7 @@ class Field {
         return REFRESH_RATE_MS;
     }
 
+
     /**
      * Weite in Pixel
      * @returns {number}
@@ -161,6 +163,11 @@ class Field {
     get html() {
         "use strict";
         return this._fieldHTML;
+    }
+
+    get puck() {
+        "use strict";
+        return this._gameObjects.get("puck");
     }
 
     /**
@@ -199,20 +206,15 @@ class Field {
     /**
      * Zeichnet alle Gameobjects ein
      */
-    play() {
+    refresh() {
         "use strict";
-        this._playInstance = window.setInterval(()=> {
-            //Berechne Position aller Objekte
-            this._gameObjects.forEach((e)=> {
-                e.calcPosition();
-            });
-            this.detectGoalCollision();
-            this.solvePuckBorderCollisions();
-            this.solveBatterCollisions();
+        //Berechne Position aller Objekte
+        this.puck.setPosition();
+        //this.detectGoalCollision();
+        //this.solvePuckBorderCollisions();
+        //this.solveBatterCollisions();
 
-            $(window).trigger("game:tick");
-
-        }, REFRESH_RATE_MS);
+        $(window).trigger("game:tick");
     }
 
     /**
@@ -291,42 +293,42 @@ class Field {
             return
         }
 
-        let ePos = puck.coord.unit;
-        let eSize = puck.size.unit;
+        let puckPos = puck.coord.unit;
+        let puckSize = puck.size.unit;
         var wallDirection;
 
         //Right border
-        if (ePos.x + eSize.x > HORZ_UNITS) {
+        if (puckPos.x + puckSize.x > HORZ_UNITS) {
             puck.coord.unit = {
                 x: HORZ_UNITS - puck.size.unit.x,
                 y: puck.coord.unit.y
             };
-            wallDirection = VEC_LEFT_RIGHT;
+            wallDirection = VERT_COLLISION;
         } else
         // Left border?
-        if (ePos.x < 0) {
+        if (puckPos.x < 0) {
             puck.coord.unit = {
                 x: 0,
                 y: puck.coord.unit.y
             };
-            wallDirection = VEC_LEFT_RIGHT;
+            wallDirection = VERT_COLLISION;
         }
 
         //Bottom border?
-        if (ePos.y + eSize.y > VERT_UNITS) {
+        if (puckPos.y + puckSize.y > VERT_UNITS) {
             puck.coord.unit = {
                 x: puck.coord.unit.x,
                 y: VERT_UNITS - puck.size.unit.y
             };
-            wallDirection = VEC_BOTTOM_TOP;
+            wallDirection = HORZ_COLLISION;
         } else
         //Top border?
-        if (ePos.y < 0) {
+        if (puckPos.y < 0) {
             puck.coord.unit = {
                 x: puck.coord.unit.x,
                 y: 0
             };
-            wallDirection = VEC_BOTTOM_TOP;
+            wallDirection = HORZ_COLLISION;
         }
 
         if (wallDirection != undefined) {

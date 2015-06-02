@@ -2,19 +2,27 @@
  * Created by Marko Grgic on 28.05.2015.
  */
 var GameObject = require("./GameObject");
-var Coord = require("./Coord");
-var Field = require("./Field");
-var Puck = require("./Puck");
 
-const GOAL_HEIGHT = Field.unitHeight / 20;
-const GOAL_WIDTH = Field.unitWidth / 4;
+var PARAMS = require("./../../../gameParams");
 
+const GOAL_HEIGHT = PARAMS.goal.height;
+const GOAL_WIDTH = PARAMS.goal.width;
 
 class Goal extends GameObject {
     constructor(facing) {
         "use strict";
+        if (facing != Goal.position.TOP && facing != Goal.position.BOTTOM) {
+            throw new Error("Invalid Goal Facing")
+        }
+
         super("goal-" + facing, $('<span class="goals"/>'), GOAL_WIDTH, GOAL_HEIGHT);
         this._facing = facing;
+
+        if (facing === Goal.position.TOP) {
+            this.coord.unit = PARAMS.goal.positionTop;
+        } else {
+            this.coord.unit = PARAMS.goal.positionBottom;
+        }
 
         $(window).on("resize", ()=> {
             super.size.refreshFromUnits();

@@ -6,6 +6,7 @@
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
+let Field = require("./Field");
 
 class SocketManager {
     constructor(enforcer) {
@@ -39,16 +40,21 @@ class SocketManager {
             if (res.msg !== undefined) {
                 modalController.errorMsg(res.msg);
             }
-
             this._stopCB();
         });
 
-        //Send Batter-Positions
-        this._socket.on("player:enemyMoved", (data)=> {
+        var field = Field.instance;
 
-            this._enemybatter.coord.unit = data.coord;
+        //Aktualisiere Spielfeld
+        this._socket.on("game:refresh", (data)=> {
+            //bewege feindlichen schläger
+            this._enemybatter.coord.unit = data.enemyCoord;
             this._enemybatter.setPosition();
-            //console.log(data);
+            //aktualisiere Puck
+            field.puck.coord.unit
+                = data.game.puck.coord;
+            //aktualisiere spielfeld
+            Field.instance.refresh();
         })
     }
 
