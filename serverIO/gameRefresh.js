@@ -4,34 +4,42 @@
  * Time: 14:00
  */
 var intervalInstance = null;
-var REFRESH_RATE_MS = 50;
+var PARAMS = require("./../GAME_PARAMETERS");
+var REFRESH_RATE_MS = PARAMS.refreshRate;
+var coord = require("./coord");
 
 module.exports = function (io, userData) {
     var initialGameData = {
         puck: {
-            speed: 10,
-            moveTo: 45,
-            coord: {
-                x: 0,
-                y: 0
-            }
+            score: PARAMS.puck.defaultScore,
+            speed: PARAMS.puck.defaultSpeed,
+            moveTo: coord.deg2rad(PARAMS.puck.defaultMoveTo),
+            coord: PARAMS.puck.defaultCoord
         },
         player: {}
     };
     var gameData = {};
 
+    /**
+     * Bewegt Puck um einen Schritt
+     */
+    var movePuck = function () {
+        var step = coord.polarToCartesian(gameData.puck.speed, gameData.puck.moveTo);
+        gameData.puck.coord.x += step.x;
+        gameData.puck.coord.y += step.y;
+    };
 
     return {
+        /**
+         * Startet gameRefreshing
+         */
         start: function () {
             //reset data
             gameData = initialGameData;
 
 
             intervalInstance = setInterval(function () {
-                //Test
-                gameData.puck.coord.x++;
-                gameData.puck.coord.y++;
-
+                movePuck();
                 //Sende nur an Spieler (!) Puck und Position des Gegners
                 for (var socketID in  userData) {
                     if (userData.hasOwnProperty(socketID)) {
@@ -41,6 +49,9 @@ module.exports = function (io, userData) {
                 }
             }, REFRESH_RATE_MS);
         },
+        /**
+         * Stoppt gameRefreshing
+         */
         stop: function () {
             "use strict";
             clearInterval(intervalInstance);

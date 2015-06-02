@@ -4,13 +4,15 @@
  * Time: 18:08
  */
 
-const RATIO = 0.666666;
-const REFRESH_RATE_MS = 50; // Muss mit FieldDrawer übereinstimmen
-const VERT_UNITS = 1000;
-const HORZ_UNITS = VERT_UNITS * RATIO;
-const VEC_BOTTOM_TOP = Math.PI; //rad
-const VEC_LEFT_RIGHT = Math.PI * 0.5; // rad
-const SPEED_INCREASE_STEP = 2;
+var PARAMS = require("./../../../GAME_PARAMETERS");
+
+const RATIO = PARAMS.field.ratio;
+const REFRESH_RATE_MS = PARAMS.refreshRate;
+const VERT_UNITS = PARAMS.field.height;
+const HORZ_UNITS = PARAMS.field.width;
+const VEC_BOTTOM_TOP = PARAMS.horzCollVec; //rad
+const VEC_LEFT_RIGHT = PARAMS.horzCollVec; // rad
+const SPEED_INCREASE_STEP = PARAMS.puck.speedIncreaseStep;
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();

@@ -5,7 +5,8 @@
 var GameObject = require("./GameObject");
 var Coord = require("./Coord");
 var Field = require("./Field");
-const BATTER_RADIUS_UNITS = 32;
+var PARAMS = require("./../../../GAME_PARAMETERS");
+const BATTER_RADIUS_UNITS = PARAMS.batter.radius;
 
 class Batter extends GameObject {
     constructor(facing, mousetracking = true) {

@@ -53,7 +53,6 @@ class SocketManager {
             //aktualisiere Puck
             field.puck.coord.unit
                 = data.game.puck.coord;
-            console.log(field.puck.coord.unit);
             //aktualisiere spielfeld
             Field.instance.refresh();
         })
