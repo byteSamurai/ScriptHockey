@@ -31,6 +31,10 @@ module.exports = function (io) {
             if (Object.keys(userData).length < 2) {
                 userData[socket.id] = {
                     name: playerName,
+                    coord: {
+                        x: 0,
+                        y: 0
+                    },
                     socket: socket
                 };
                 callback({

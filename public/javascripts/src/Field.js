@@ -222,7 +222,6 @@ class Field {
      */
     stop() {
         "use strict";
-
         window.clearInterval(this._playInstance);
 
         this._nonPersistenGameObjectsIDs.forEach((e)=> {

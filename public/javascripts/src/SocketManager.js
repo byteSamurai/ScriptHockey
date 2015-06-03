@@ -14,15 +14,15 @@ class SocketManager {
         if (enforcer != singletonEnforcer) {
             throw "Cannot construct singleton";
         }
-        this._startCB = null;
-        this._stopCB = null;
-        this._dashboardUpdate = null;
-        this._disconnected = null;
+        this._onGameStart = null;
+        this._onGameStop = null;
+        this._onGoal = null;
+        this._onDisconnected = null;
+        this._onGameOver = null;
         this._socket = io.connect();
 
         this._socket.on("disconnect", ()=> {
-            this._disconnected();
-            //this._socket.disconnect();
+            this._onDisconnected();
         });
 
         //Startgame
@@ -35,7 +35,7 @@ class SocketManager {
             var position = res.playerPos == "top" ? "oben" : "unten";
             modalController.noticeMsg("Du spielst " + position);
 
-            this._startCB(res.playerPos);
+            this._onGameStart(res.playerPos);
         });
 
         //Stopgame
@@ -47,7 +47,7 @@ class SocketManager {
             if (res.msg !== undefined) {
                 modalController.errorMsg(res.msg);
             }
-            this._stopCB();
+            this._onGameStop();
         });
 
         var field = Field.instance;
@@ -65,13 +65,25 @@ class SocketManager {
         });
         // Bei Toor
         this._socket.on("game:goal", (data)=> {
-            this._dashboardUpdate(data[0], data[1]);
+            this._onGoal(data[0], data[1]);
         });
 
         // Bei Spielende
         this._socket.on("game:over", (data)=> {
-            console.log(data);
+            this._onGameOver(data);
         });
+    }
+
+    /**
+     * Wenn Spiel vorbei ist
+     * @param func
+     */
+    set onGameOver(func) {
+        "use strict";
+        if (typeof func !== "function") {
+            throw new Error("Musst be a Function-referenz")
+        }
+        this._onGameOver = func;
     }
 
     /**
@@ -83,41 +95,43 @@ class SocketManager {
         if (typeof func !== "function") {
             throw new Error("Musst be a Function-referenz")
         }
-        this._disconnected = func;
+        this._onDisconnected = func;
     }
+
     /**
      * Funktion um Dashboard zu aktuslisieren
      * @param func
      */
-    set updateDashboardCallback(func) {
+    set onGoal(func) {
         "use strict";
         if (typeof func !== "function") {
             throw new Error("Musst be a Function-referenz")
         }
-        this._dashboardUpdate = func;
+        this._onGoal = func;
     }
+
     /**
      * Setzt die Start-Funktion um das Spiel zu beginnen
      * @param func
      */
-    set startgameCallback(func) {
+    set onGameStart(func) {
         "use strict";
         if (typeof func !== "function") {
             throw new Error("Musst be a Function-referenz")
         }
-        this._startCB = func;
+        this._onGameStart = func;
     }
 
     /**
      * Setzt die Stop-Funktion um das Spiel zu stoppen
      * @param func
      */
-    set stopgameCallback(func) {
+    set onGameStop(func) {
         "use strict";
         if (typeof func !== "function") {
             throw new Error("Musst be a Function-referenz")
         }
-        this._stopCB = func;
+        this._onGameStop = func;
     }
 
     set registerEnemyBatter(batter) {

@@ -17,7 +17,7 @@ var modalController = {
     /**
      * Bindet notwendige Events für Namenseingabevalidierung
      */
-    setupEnterNameModal: ()=> {
+    setupModals: ()=> {
         "use strict";
         $("#submit_player_name_form").on("click", (e)=> {
             e.preventDefault();
@@ -44,7 +44,6 @@ var modalController = {
                         case "player:nameok":
                             modalController.checkPlayerAmount(true);
                     }
-
                 });
             }
         });
@@ -97,6 +96,22 @@ var modalController = {
         "use strict";
         $("#serverFull_Modal").openModal({
             dismissible: false
+        });
+    },
+    /**
+     * Nachricht: Highscore + Wer hat geonnen
+     */
+    highscoreModal: (hasWon, highscores)=> {
+        "use strict";
+        $("#highscore_Modal").openModal({
+            dismissible: false,
+            ready: ()=> {
+                $("#highscore-WinLose-message").html(hasWon ? "Du hast gewonnen!" : "Du hast verloren!")
+                $("#highscores").html("");
+                highscores.forEach((e)=> {
+                    $("#highscores").append("<tr><td>" + e.userName + "</td><td>" + e.score + "</td></tr>")
+                })
+            }
         });
     }
 };

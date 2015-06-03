@@ -27,6 +27,7 @@ module.exports = function (io, userData) {
      */
     var movePuck = function () {
         detectGoal();
+
         solvePuckBorderCollisions();
         solveBatterCollisions();
         var step = coord.polarToCartesian(puck.speed, puck.moveTo);
@@ -37,20 +38,20 @@ module.exports = function (io, userData) {
     /**
      * Löst Tor-Event aus
      */
-    var triggerGoal = function (type) {
+    var triggerGoal = function (playerPos) {
         gameInstance.freezePuck();
         //Timeout verhindert mehrer Toor in zu kurzer Zeit und Prell-Pucks
-        var ID//socketIT-Iterator
+        var ID;//socketIT-Iterator
         for (ID in userData) {
             if (!userData.hasOwnProperty(ID)) {
                 throw new Error("Inkonsistene Nutzerdaten");
             }
             //Weiter zum nächsten Benutzer
-            if (userData[ID].position != type) {
+            if (userData[ID].position != playerPos) {
                 continue;
             }
             //Tore eintragen
-            if (userData[ID].position == type) {
+            if (userData[ID].position == playerPos) {
                 userData[ID].score += puck.score;
                 userData[ID].goals += 1;
                 break;
@@ -65,11 +66,12 @@ module.exports = function (io, userData) {
             if (!userData.hasOwnProperty(ID)) {
                 throw new Error("Inkonsistente Nutzerdaten");
             }
+
             //gewonnen?
             if (userData[ID].goals >= PARAMS.goalsToWin) {
                 gameInstance.over(userData[ID].position);
                 gameInstance.stop();
-                break;
+                return;
             }
         }
 
@@ -108,14 +110,14 @@ module.exports = function (io, userData) {
         if (puck.coord.y <= 0
             && puck.coord.x - PUCK_RADIUS / 2 > start
             && puck.coord.x + PUCK_RADIUS / 2 < end) {
-            triggerGoal("top");
+            triggerGoal("bottom"); //unterer Spieler
 
         } else
         //Unteres Tor
         if ((puck.coord.y + 2 * PUCK_RADIUS) >= VERT_UNITS - PUCK_RADIUS
             && puck.coord.x - PUCK_RADIUS / 2 > start
             && puck.coord.x + PUCK_RADIUS / 2 < end) {
-            triggerGoal("bottom");
+            triggerGoal("top"); //oberer Spieler
         }
     };
     /**
@@ -216,6 +218,7 @@ module.exports = function (io, userData) {
          */
         start: function () {
             //reset data
+            gameInstance.releasePuck();
             gameInstance.resetPuck();
 
             //Setzte Scores und goals zurück
@@ -316,28 +319,38 @@ module.exports = function (io, userData) {
          */
         over: function (winPosition) {
             "use strict";
-            //TODO: trage Highscore ein und liefere letzte 10 mit Event zum Spieler
-            var highscoreData = {
-                ranking: [{name: "sepp", score: 23}] //z.B uns so weiter
-            };
-
-            var eventData = []; //Daten die per Event ausgeliefert werden
-
+            var highscore = require("./highscores");
             for (var socketID in  userData) {
-                if (userData.hasOwnProperty(socketID)) {
-                    eventData.push({
-                        socketID: socketID,
-                        // Weil Zieltor und Spielposition invertiert sind
-                        isWinner: userData[socketID].position !== winPosition,
-                        highscores: highscoreData
+
+                //finde Gewinner und trage ein
+                if (userData.hasOwnProperty(socketID) && userData[socketID].position === winPosition) {
+                    highscore.add(userData[socketID].name, userData[socketID].score, function (err, highscoreData) {
+                        if (err !== null) {
+                            throw new Error("DB: " + err.message)
+                        }
+
+                        var eventData = []; //Daten die per Event ausgeliefert werden
+
+                        for (socketID in  userData) {
+                            if (userData.hasOwnProperty(socketID)) {
+                                eventData.push({
+                                    socketID: socketID,
+                                    // Weil Zieltor und Spielposition invertiert sind
+                                    isWinner: userData[socketID].position === winPosition,
+                                    highscores: highscoreData
+                                });
+                            }
+                        }
+                        eventData.forEach(function (e) {
+                            userData[e.socketID].socket.emit("game:over", e)
+                        });
+
                     });
+                    break;
                 }
             }
-            eventData.forEach(function (e) {
-                userData[e.socketID].socket.emit("game:over",
-                    e
-                )
-            });
+
+
         }
     };
 

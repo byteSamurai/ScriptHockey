@@ -7,7 +7,7 @@
 var PARAMS = {
     refreshRate: 30,
     timeoutAfterGoal: 1000,
-    goalsToWin: 7,
+    goalsToWin: 3,
     vertCollVec: Math.PI * 0.5,//rad
     horzCollVec: Math.PI,//rad
     puck: {

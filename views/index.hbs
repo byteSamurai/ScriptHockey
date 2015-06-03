@@ -69,5 +69,41 @@
                 </div>
             </div>
         </div>
+        <!-- Highscores -->
+        <div id="highscore_Modal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <div class="col s12">
+                    <div class="row">
+                        <div class="col s12">
+                            <!-- wird durch ModalController eingefügt -->
+                            <h4 id="highscore-WinLose-message"></h4>
+                        </div>
+                        <p>Hier die letzten Highscores nach Punkte sortiert. Nur die letzten 10 Spiele werden
+                            gespeichert.</p>
+                        <table class="hoverable striped ">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Punkte</th>
+                            </tr>
+                            </thead>
+                            <tbody id="highscores">
+                            <tr>
+                                <td>Dieter</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Darth Vader</td>
+                                <td>100e20</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" id="play_again" class="modal-action waves-effect  btn-flat ">Nochmal spielen!</a>
+            </div>
+        </div>
     </div>
 </div>

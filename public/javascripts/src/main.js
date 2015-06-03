@@ -28,7 +28,7 @@ $(function () {
     let goalTop = new Goal(Goal.position.TOP);
     let goalBottom = new Goal(Goal.position.BOTTOM);
 
-    modalController.setupEnterNameModal();
+    modalController.setupModals();
     //Öffne Modalfenster für Namenswahl
     modalController.enterName();
 
@@ -41,7 +41,7 @@ $(function () {
      * Startet neues Spiel
      * @param {"top"|"bottom"} facing Spielfeldhälfte
      */
-    socketManager.startgameCallback = (facing)=> {
+    socketManager.onGameStart = (facing)=> {
         "use strict";
         let ownPosition, ownStartPosition, enemyPosition, enemyStartPosition;
 
@@ -73,12 +73,30 @@ $(function () {
         field.deployGameObject(puck, false);
         field.build();
     };
-
-    socketManager.stopgameCallback = field.stop;
-    socketManager.updateDashboardCallback = Dashboard.update;
+    /**
+     * Stoppt Spiel
+     */
+    socketManager.onGameStop = ()=> {
+        field.stop();
+    };
+    /**
+     * Bei Tor
+     */
+    socketManager.onGoal = Dashboard.update; //Static method, no lambda needed
+    /**
+     * Bei Spielende
+     */
+    socketManager.onGameOver = (data)=> {
+        "use strict";
+        modalController.highscoreModal(data.isWinner, data.highscores)
+    };
+    /**
+     * Bei Verbindungsverlust
+     */
     socketManager.onDisconnect = ()=> {
         "use strict";
         modalController.errorMsg("Verbindung zum Server verloren. Bitte Browser aktualisieren!", true)
+        location.reload(true); // nicht aus dem Cache
     };
 
     //Shadow-Animation
