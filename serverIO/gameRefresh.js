@@ -38,9 +38,10 @@ module.exports = function (io, userData) {
      * Löst Tor-Event aus
      */
     var triggerGoal = function (type) {
-        gameInstanz.freezePuck();
+        gameInstance.freezePuck();
         //Timeout verhindert mehrer Toor in zu kurzer Zeit und Prell-Pucks
-        for (var ID in userData) {
+        var ID//socketIT-Iterator
+        for (ID in userData) {
             if (!userData.hasOwnProperty(ID)) {
                 throw new Error("Inkonsistene Nutzerdaten");
             }
@@ -52,21 +53,30 @@ module.exports = function (io, userData) {
             if (userData[ID].position == type) {
                 userData[ID].score += puck.score;
                 userData[ID].goals += 1;
-            }
-
-            //gewonnen?
-            if (userData[ID].goals >= PARAMS.goalsToWin) {
-                gameInstanz.over(userData[ID].position);
                 break;
             }
         }
 
         //Aktualisiere Dashboard
-        gameInstanz.updateDashboard();
+        gameInstance.updateDashboard();
+
+        //Gibt es einen Gewinner?
+        for (ID in userData) {
+            if (!userData.hasOwnProperty(ID)) {
+                throw new Error("Inkonsistente Nutzerdaten");
+            }
+            //gewonnen?
+            if (userData[ID].goals >= PARAMS.goalsToWin) {
+                gameInstance.over(userData[ID].position);
+                gameInstance.stop();
+                break;
+            }
+        }
+
         setTimeout(function () {
             "use strict";
-            gameInstanz.resetPuck();
-            gameInstanz.releasePuck();
+            gameInstance.resetPuck();
+            gameInstance.releasePuck();
         }, PARAMS.timeoutAfterGoal);
     };
 
@@ -200,19 +210,19 @@ module.exports = function (io, userData) {
             }
         });
     };
-    var gameInstanz = {
+    var gameInstance = {
         /**
          * Startet gameRefreshing
          */
         start: function () {
             //reset data
-            gameInstanz.resetPuck();
+            gameInstance.resetPuck();
 
             //Setzte Scores und goals zurück
-            gameInstanz.resetPlayer();
+            gameInstance.resetPlayer();
 
             //Dashboard zeichnen
-            gameInstanz.updateDashboard();
+            gameInstance.updateDashboard();
 
             intervalInstance = setInterval(function () {
                 if (puckIsFrozen !== true) {
@@ -308,23 +318,28 @@ module.exports = function (io, userData) {
             "use strict";
             //TODO: trage Highscore ein und liefere letzte 10 mit Event zum Spieler
             var highscoreData = {
-                ranking: [{name: "sepp", score: 23}] // uns so weiter
+                ranking: [{name: "sepp", score: 23}] //z.B uns so weiter
             };
+
+            var eventData = []; //Daten die per Event ausgeliefert werden
+
             for (var socketID in  userData) {
                 if (userData.hasOwnProperty(socketID)) {
-                    highscoreData.push({
+                    eventData.push({
                         socketID: socketID,
-                        isWinner: userData[socketID] === winPosition
+                        // Weil Zieltor und Spielposition invertiert sind
+                        isWinner: userData[socketID].position !== winPosition,
+                        highscores: highscoreData
                     });
                 }
             }
-            highscoreData.forEach(function (e) {
+            eventData.forEach(function (e) {
                 userData[e.socketID].socket.emit("game:over",
-                    highscoreData
+                    e
                 )
             });
         }
     };
 
-    return gameInstanz;
+    return gameInstance;
 };
