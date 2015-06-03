@@ -86,7 +86,7 @@ var refresh = function (f) {
 /**
  * Watchers
  */
-gulp.task('watch', ["server"], function () {
+gulp.task('watch', ["server", "default"], function () {
     livereload.listen({
         start: true,
         quiet: false

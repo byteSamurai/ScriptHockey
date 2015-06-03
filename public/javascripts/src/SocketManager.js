@@ -17,7 +17,13 @@ class SocketManager {
         this._startCB = null;
         this._stopCB = null;
         this._dashboardUpdate = null;
+        this._disconnected = null;
         this._socket = io.connect();
+
+        this._socket.on("disconnect", ()=> {
+            this._disconnected();
+            //this._socket.disconnect();
+        });
 
         //Startgame
         this._socket.on("game:start", (res)=> {
@@ -57,12 +63,28 @@ class SocketManager {
             //aktualisiere spielfeld
             Field.instance.refresh();
         });
-
+        // Bei Toor
         this._socket.on("game:goal", (data)=> {
             this._dashboardUpdate(data[0], data[1]);
         });
+
+        // Bei Spielende
+        this._socket.on("game:over", (data)=> {
+            console.log(data);
+        });
     }
 
+    /**
+     * Funktion die Verbindungsverlust behandelt
+     * @param func
+     */
+    set onDisconnect(func) {
+        "use strict";
+        if (typeof func !== "function") {
+            throw new Error("Musst be a Function-referenz")
+        }
+        this._disconnected = func;
+    }
     /**
      * Funktion um Dashboard zu aktuslisieren
      * @param func

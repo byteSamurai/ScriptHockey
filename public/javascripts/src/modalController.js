@@ -10,9 +10,9 @@ var modalController = {
         "use strict";
         Materialize.toast(msg, 4000, "blue darken-2");
     },
-    errorMsg: (msg)=> {
+    errorMsg: (msg, persistent = false)=> {
         "use strict";
-        Materialize.toast(msg, 4000, "red darken-3");
+        Materialize.toast(msg, persistent ? 1000 * 365 * 3600 : 4000, "red darken-3");
     },
     /**
      * Bindet notwendige Events für Namenseingabevalidierung

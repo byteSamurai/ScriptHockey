@@ -41,17 +41,26 @@ module.exports = function (io, userData) {
         gameInstanz.freezePuck();
         //Timeout verhindert mehrer Toor in zu kurzer Zeit und Prell-Pucks
         for (var ID in userData) {
+            if (!userData.hasOwnProperty(ID)) {
+                throw new Error("Inkonsistene Nutzerdaten");
+            }
             //Weiter zum nächsten Benutzer
-            if (userData.hasOwnProperty(ID) && userData[ID].position != type) {
+            if (userData[ID].position != type) {
                 continue;
             }
             //Tore eintragen
-            if (userData.hasOwnProperty(ID) && userData[ID].position == type) {
+            if (userData[ID].position == type) {
                 userData[ID].score += puck.score;
                 userData[ID].goals += 1;
+            }
+
+            //gewonnen?
+            if (userData[ID].goals >= PARAMS.goalsToWin) {
+                gameInstanz.over(userData[ID].position);
                 break;
             }
         }
+
         //Aktualisiere Dashboard
         gameInstanz.updateDashboard();
         setTimeout(function () {
@@ -225,10 +234,16 @@ module.exports = function (io, userData) {
             "use strict";
             clearInterval(intervalInstance);
         },
+        /**
+         * Friert puck ein
+         */
         freezePuck: function () {
             "use strict";
             puckIsFrozen = true;
         },
+        /**
+         * GIbt Puck frei
+         */
         releasePuck: function () {
             puckIsFrozen = false;
         },
@@ -256,6 +271,9 @@ module.exports = function (io, userData) {
                 )
             });
         },
+        /**
+         * Setzt Puck zurück
+         */
         resetPuck: function () {
             "use strict";
             PARAMS = require("../gameParams")();
@@ -268,6 +286,10 @@ module.exports = function (io, userData) {
 
             puck = extend({}, initialPuckData);
         },
+
+        /**
+         * Setzt spieler zurück
+         */
         resetPlayer: function () {
             "use strict";
 
@@ -277,6 +299,30 @@ module.exports = function (io, userData) {
                     userData[ID].score = 0;
                 }
             }
+        },
+        /**
+         * Spiel vorbei
+         * @param winPosition
+         */
+        over: function (winPosition) {
+            "use strict";
+            //TODO: trage Highscore ein und liefere letzte 10 mit Event zum Spieler
+            var highscoreData = {
+                ranking: [{name: "sepp", score: 23}] // uns so weiter
+            };
+            for (var socketID in  userData) {
+                if (userData.hasOwnProperty(socketID)) {
+                    highscoreData.push({
+                        socketID: socketID,
+                        isWinner: userData[socketID] === winPosition
+                    });
+                }
+            }
+            highscoreData.forEach(function (e) {
+                userData[e.socketID].socket.emit("game:over",
+                    highscoreData
+                )
+            });
         }
     };
 

@@ -76,6 +76,10 @@ $(function () {
 
     socketManager.stopgameCallback = field.stop;
     socketManager.updateDashboardCallback = Dashboard.update;
+    socketManager.onDisconnect = ()=> {
+        "use strict";
+        modalController.errorMsg("Verbindung zum Server verloren. Bitte Browser aktualisieren!", true)
+    };
 
     //Shadow-Animation
     //$(window).on("game:tick", ()=> {
