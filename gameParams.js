@@ -16,7 +16,7 @@ var PARAMS = {
         defaultScore: 50,
         speedIncreaseStep: 5,
         defaultSpeed: 0,
-        maxSpeed: 40,
+        maxSpeed: 30,
         defaultMoveTo: 0, // in grad!!!!
         defaultCoord: {
             x: null,
