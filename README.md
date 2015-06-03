@@ -1,6 +1,8 @@
 # ScriptHockey
 Study-Project: A Node-JS implementation of ScriptHockey
 
+![Screenshot](/docs/screenshot.jpg)
+
 ## Install
 [Installation](INSTALL.md)
 
