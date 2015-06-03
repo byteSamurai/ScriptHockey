@@ -6,7 +6,8 @@
 // Alle Angaben in UNITS, nicht in Pixel!
 var PARAMS = {
     refreshRate: 30,
-    timeoutAfterGoal: 1500,
+    timeoutAfterGoal: 1000,
+    goalsToWin: 7,
     vertCollVec: Math.PI * 0.5,//rad
     horzCollVec: Math.PI,//rad
     puck: {
@@ -43,16 +44,22 @@ var PARAMS = {
         height: null
     }
 };
+var setDefaults = function () {
+    "use strict";
+    //Berechne einige Werte nach
+    PARAMS.field.width = PARAMS.field.height * PARAMS.field.ratio;
+    PARAMS.goal.height = PARAMS.field.height / 20;
+    PARAMS.goal.width = PARAMS.field.width / 4;
+    PARAMS.goal.positionTop.x = PARAMS.field.width / 4 * 1.5;
+    PARAMS.goal.positionTop.y = PARAMS.goal.height / 2 * -1;
+    PARAMS.goal.positionBottom.x = PARAMS.goal.positionTop.x;
+    PARAMS.goal.positionBottom.y = PARAMS.field.height - PARAMS.goal.height / 2;
+    PARAMS.puck.defaultCoord.x = PARAMS.field.width / 2 - PARAMS.puck.radius;
+    PARAMS.puck.defaultCoord.y = PARAMS.field.height / 2 - PARAMS.puck.radius;
+};
 
-//Berechne einige Werte nach
-PARAMS.field.width = PARAMS.field.height * PARAMS.field.ratio;
-PARAMS.goal.height = PARAMS.field.height / 20;
-PARAMS.goal.width = PARAMS.field.width / 4;
-PARAMS.goal.positionTop.x = PARAMS.field.width / 4 * 1.5;
-PARAMS.goal.positionTop.y = PARAMS.goal.height / 2 * -1;
-PARAMS.goal.positionBottom.x = PARAMS.goal.positionTop.x;
-PARAMS.goal.positionBottom.y = PARAMS.field.height - PARAMS.goal.height / 2;
-PARAMS.puck.defaultCoord.x = PARAMS.field.width / 2 - PARAMS.puck.radius;
-PARAMS.puck.defaultCoord.y = PARAMS.field.height / 2 - PARAMS.puck.radius;
 
-module.exports = PARAMS;
+module.exports = function () {
+    setDefaults();
+    return PARAMS;
+};

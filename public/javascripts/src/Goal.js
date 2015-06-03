@@ -3,7 +3,7 @@
  */
 var GameObject = require("./GameObject");
 
-var PARAMS = require("./../../../gameParams");
+var PARAMS = require("./../../../gameParams")();
 
 const GOAL_HEIGHT = PARAMS.goal.height;
 const GOAL_WIDTH = PARAMS.goal.width;

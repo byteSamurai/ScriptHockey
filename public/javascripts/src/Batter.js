@@ -5,7 +5,7 @@
 var GameObject = require("./GameObject");
 var Coord = require("./Coord");
 var Field = require("./Field");
-var PARAMS = require("./../../../gameParams");
+var PARAMS = require("./../../../gameParams")();
 const BATTER_RADIUS_UNITS = PARAMS.batter.radius;
 
 class Batter extends GameObject {

@@ -53,7 +53,7 @@ class SocketManager {
             this._enemybatter.setPosition();
             //aktualisiere Puck
             field.puck.coord.unit
-                = data.game.puck.coord;
+                = data.puck.coord;
             //aktualisiere spielfeld
             Field.instance.refresh();
         });

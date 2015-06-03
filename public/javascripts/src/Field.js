@@ -4,7 +4,7 @@
  * Time: 18:08
  */
 
-var PARAMS = require("./../../../gameParams");
+var PARAMS = require("./../../../gameParams")();
 
 const RATIO = PARAMS.field.ratio;
 const REFRESH_RATE_MS = PARAMS.refreshRate;

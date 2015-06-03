@@ -4,28 +4,14 @@
  * Time: 14:00
  */
 var intervalInstance = null;
-var PARAMS = require("./../gameParams");
+var PARAMS = require("./../gameParams")();
 var REFRESH_RATE_MS = PARAMS.refreshRate;
 var coord = require("./coord");
 var extend = require('util')._extend;
 
 module.exports = function (io, userData) {
-    var initialGameData = {
-        puck: {
-            score: PARAMS.puck.defaultScore,
-            speed: PARAMS.puck.defaultSpeed,
-            moveTo: coord.deg2rad(PARAMS.puck.defaultMoveTo),
-            coord: PARAMS.puck.defaultCoord,
-            centerCoord: function () {
-                return {
-                    x: gameData.puck.coord.x - PUCK_RADIUS,
-                    y: gameData.puck.coord.y - PUCK_RADIUS
-                }
-            }
-        },
-        player: {}
-    };
-    var gameData = {};
+
+    var puck = {};
     var puckIsFrozen = false; // Spiel pausiert?
     /**
      * needed Parameter
@@ -43,9 +29,9 @@ module.exports = function (io, userData) {
         detectGoal();
         solvePuckBorderCollisions();
         solveBatterCollisions();
-        var step = coord.polarToCartesian(gameData.puck.speed, gameData.puck.moveTo);
-        gameData.puck.coord.x += step.x;
-        gameData.puck.coord.y += step.y;
+        var step = coord.polarToCartesian(puck.speed, puck.moveTo);
+        puck.coord.x += step.x;
+        puck.coord.y += step.y;
     };
 
     /**
@@ -61,7 +47,7 @@ module.exports = function (io, userData) {
             }
             //Tore eintragen
             if (userData.hasOwnProperty(ID) && userData[ID].position == type) {
-                userData[ID].score += gameData.puck.score;
+                userData[ID].score += puck.score;
                 userData[ID].goals += 1;
                 break;
             }
@@ -70,10 +56,7 @@ module.exports = function (io, userData) {
         gameInstanz.updateDashboard();
         setTimeout(function () {
             "use strict";
-            gameData.puck.coord = PARAMS.puck.defaultCoord; // Zurücksetzen
-            gameData.puck.moveTo = PARAMS.puck.defaultMoveTo;
-            gameData.puck.speed = PARAMS.puck.defaultSpeed;
-            gameData.puck.score = 0;
+            gameInstanz.resetPuck();
             gameInstanz.releasePuck();
         }, PARAMS.timeoutAfterGoal);
     };
@@ -98,7 +81,7 @@ module.exports = function (io, userData) {
         if (puckIsFrozen) { // Abbruch bei Pause
             return;
         }
-        var puck = gameData.puck;
+
         var start = PARAMS.goal.positionBottom.x; // beide x-Coordinaten sind gleich
         var end = start + PARAMS.goal.width;
 
@@ -120,7 +103,7 @@ module.exports = function (io, userData) {
      * Löst Banden-Kollisionen auf
      */
     var solvePuckBorderCollisions = function () {
-        var puck = gameData.puck;
+
         var puckPos = puck.coord;
         var puckSize = {
             x: PUCK_RADIUS * 2,
@@ -173,7 +156,6 @@ module.exports = function (io, userData) {
      */
     var solveBatterCollisions = function () {
         "use strict";
-        var puck = gameData.puck;
 
         var batters = [];
         for (var socketID in userData) {
@@ -215,14 +197,13 @@ module.exports = function (io, userData) {
          */
         start: function () {
             //reset data
-            gameData = extend({}, initialGameData);
+            gameInstanz.resetPuck();
+
             //Setzte Scores und goals zurück
-            for (var ID in  userData) {
-                if (userData.hasOwnProperty(ID)) {
-                    userData[ID].goals = 0;
-                    userData[ID].score = 0;
-                }
-            }
+            gameInstanz.resetPlayer();
+
+            //Dashboard zeichnen
+            gameInstanz.updateDashboard();
 
             intervalInstance = setInterval(function () {
                 if (puckIsFrozen !== true) {
@@ -232,7 +213,7 @@ module.exports = function (io, userData) {
                 for (var socketID in  userData) {
                     if (userData.hasOwnProperty(socketID)) {
                         userData[socketID].socket.emit("game:refresh",
-                            {game: gameData, enemyCoord: userData[socketID].enemyCoord})
+                            {puck: puck, enemyCoord: userData[socketID].enemyCoord})
                     }
                 }
             }, REFRESH_RATE_MS);
@@ -249,7 +230,7 @@ module.exports = function (io, userData) {
             puckIsFrozen = true;
         },
         releasePuck: function () {
-            puckIsFrozen = true;
+            puckIsFrozen = false;
         },
         /**
          * Aktualsiert das Dashboard
@@ -274,6 +255,28 @@ module.exports = function (io, userData) {
                     dashboardData
                 )
             });
+        },
+        resetPuck: function () {
+            "use strict";
+            PARAMS = require("../gameParams")();
+            var initialPuckData = {
+                score: PARAMS.puck.defaultScore,
+                speed: PARAMS.puck.defaultSpeed,
+                moveTo: coord.deg2rad(PARAMS.puck.defaultMoveTo),
+                coord: PARAMS.puck.defaultCoord
+            };
+
+            puck = extend({}, initialPuckData);
+        },
+        resetPlayer: function () {
+            "use strict";
+
+            for (var ID in  userData) {
+                if (userData.hasOwnProperty(ID)) {
+                    userData[ID].goals = 0;
+                    userData[ID].score = 0;
+                }
+            }
         }
     };
 

@@ -10,7 +10,7 @@ var Dashboard = require("./Dashboard");
 var SocketManager = require("./SocketManager");
 var Goal = require("./Goal");
 var modalController = require("./modalController");
-var PARAMS = require("./../../../gameParams");
+var PARAMS = require("./../../../gameParams")();
 
 $(function () {
 

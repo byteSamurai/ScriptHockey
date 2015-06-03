@@ -6,7 +6,7 @@
 
 var GameObject = require("./GameObject");
 var Coord = require("./Coord");
-var PARAMS = require("./../../../gameParams");
+var PARAMS = require("./../../../gameParams")();
 
 const PUCK_RADIUS_UNITS = PARAMS.puck.radius;
 const SCORE_START = PARAMS.puck.defaultScore;
@@ -28,7 +28,6 @@ class Puck extends GameObject {
                 height: super.size.pixel.y
             });
         }).trigger("resize");
-
     }
 
     /**
