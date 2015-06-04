@@ -35,6 +35,10 @@ module.exports = function (io) {
                         x: 0,
                         y: 0
                     },
+                    enemyCoord: {
+                        x: 0,
+                        y: 0
+                    },
                     socket: socket
                 };
                 callback({
