@@ -108,12 +108,19 @@ var modalController = {
      */
     highscoreModal: (hasWon, highscores)=> {
         "use strict";
+        $("#highscore-Lose-smiley").hide();
+        $("#highscore-Win-smiley").hide();
+
         $("#highscore_Modal").openModal({
             dismissible: false,
             ready: ()=> {
                 $("#highscore-WinLose-message").html(hasWon ?  "Du hast gewonnen!" : "Du hast verloren!");
-
-                $("#highscore-WinLose-smiley").html(hasWon ? '<img src="./images/smileyWon.png" />' : '<img src="./images/smileyLost.png" />');
+                if(hasWon){
+                    $("#highscore-Win-smiley").show();
+                }
+                else{
+                    $("#highscore-Lose-smiley").show();
+                }
                 $("#highscores").html("");
                 highscores.forEach((e)=> {
                     $("#highscores").append("<tr><td>" + e.userName + "</td><td>" + e.score + "</td></tr>")
