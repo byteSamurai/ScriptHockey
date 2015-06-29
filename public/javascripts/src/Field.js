@@ -417,7 +417,7 @@ class Field {
                         score: puck.score
                     })
                 }
-
+                //Unteres Tor
                 if ((puck.coord.unit.y + 2 * Puck.radius) >= VERT_UNITS - Puck.radius
                     && puck.coord.unit.x - Puck.radius / 2 > start
                     && puck.coord.unit.x + Puck.radius / 2 < end) {

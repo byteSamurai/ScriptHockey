@@ -82,7 +82,12 @@ $(function () {
     /**
      * Bei Tor
      */
-    socketManager.onGoal = Dashboard.update; //Static method, no lambda needed
+    socketManager.onGoal = (player1Data, player2Data)=> {
+        if (player1Data.goals > 0 || player2Data.goals > 0) {
+            modalController.goalMsg("TOOOOOOOR!!!");
+        }
+        Dashboard.update(player1Data, player2Data);
+    };
     /**
      * Bei Spielende
      */

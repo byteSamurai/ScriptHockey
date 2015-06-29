@@ -4,8 +4,13 @@
  * Time: 18:57
  */
 var SocketManager = require("./SocketManager");
+var Params = require("./../../../gameParams")();
 
 var modalController = {
+    goalMsg:(msg)=>{
+        "use strict";
+        Materialize.toast(msg, Params.timeoutAfterGoal*2, "goal blue darken-2 white-tex");
+    },
     noticeMsg: (msg)=> {
         "use strict";
         Materialize.toast(msg, 4000, "blue darken-2");
@@ -106,7 +111,9 @@ var modalController = {
         $("#highscore_Modal").openModal({
             dismissible: false,
             ready: ()=> {
-                $("#highscore-WinLose-message").html(hasWon ? "Du hast gewonnen!" : "Du hast verloren!")
+                $("#highscore-WinLose-message").html(hasWon ?  "Du hast gewonnen!" : "Du hast verloren!");
+
+                $("#highscore-WinLose-smiley").html(hasWon ? '<img src="./images/smileyWon.png" />' : '<img src="./images/smileyLost.png" />');
                 $("#highscores").html("");
                 highscores.forEach((e)=> {
                     $("#highscores").append("<tr><td>" + e.userName + "</td><td>" + e.score + "</td></tr>")
