@@ -13,13 +13,7 @@ var jsOutput = ['./public/javascripts/dist/**/*.js'];
 var cssFiles = ['./public/css/**/*.css'];
 var htmlFiles = ['./views/**/*.hbs'];
 var jsBrowserifyFiles = ['./public/javascripts/src/main.js', './public/javascripts/src/**/*.js', './gameParams.js'];
-/**
- * Setz produktiv-Umgebung
- * zu setzen bei Aufruf
- * <pre>
- *     PRODUCTION=1 gulp
- */
-var production = process.env.PRODUCTION == 1;
+
 
 //Required by Gulp
 var gulp = require('gulp'),
@@ -28,12 +22,23 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     through2 = require('through2'),
+    open = require("open"),
     path = require('path'),
     uglify = require('gulp-uglify'),
     gulpif = require('gulp-if'),
     nodemon = require('gulp-nodemon'),
     karma = require('karma').server,
+    util = require('gulp-util'),
     run = require('gulp-run');
+
+/**
+ * Setz produktiv-Umgebung
+ * zu setzen bei Aufruf
+ * <pre>
+ *     gulp ... --production
+ */
+var production = util.env.production;
+
 /**
  * Fügt module zusammen
  */
@@ -66,6 +71,7 @@ gulp.task("server", function () {
     process.env.DEBUG = production ? 0 : "ScriptHockey:*";
 
     if(production){
+        console.log("running production mode");
         require("./bin/www");
     }else{
         nodemon({
@@ -75,6 +81,7 @@ gulp.task("server", function () {
             env: {'NODE_ENV': 'development'}
         });
     }
+    open("http://localhost:3000");
 });
 
 //Refresh
